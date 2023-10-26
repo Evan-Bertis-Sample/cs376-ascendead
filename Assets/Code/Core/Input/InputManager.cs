@@ -74,7 +74,7 @@ namespace CurlyCore.Input
             _playerDevices.Remove(player);
         }
 
-        public InputAction.CallbackContext GetContext(string path, int player)
+        public InputAction.CallbackContext GetContext(string path, int player = 0)
         {
             if (player >= _playerDevices.Count) return default;
             if (_playerDevices[player] == null) return default;
@@ -88,6 +88,14 @@ namespace CurlyCore.Input
             if (_playerDevices[player] == null) return default;
 
             return _playerDevices[player].GetStatusByPath(path);
+        }
+
+        public T ReadInput<T>(string path, int player = 0) where T : struct
+        {
+            if (player >= _playerDevices.Count) return default;
+            if (_playerDevices[player] == null) return default;
+
+            return GetContext(path, player).ReadValue<T>();
         }
         #region Utilities
         private bool IsInputAssigned(string actionName, string mapName)

@@ -29,6 +29,19 @@ namespace CurlyUtility.DSA
         /// </summary>
         /// <value></value>
         public IState<StateContextType> CurrentState { get; private set; }
+
+        /// <summary>
+        /// The current state that the state machine is in, including nested states, if the current state is a state machine
+        /// </summary>
+        public IState<StateContextType> NestedCurrentState()
+        {
+            if (CurrentState is StateMachine<StateContextType> nestedStateMachine)
+            {
+                return nestedStateMachine.NestedCurrentState();
+            }
+            return CurrentState;
+        }
+
         private bool _hasStarted = false; // Have we called OnStateEnter() of the current state yet?
 
         /// <summary>

@@ -22,7 +22,7 @@ namespace CurlyEditor.Utility
             }
 
             float buttonWidth = _standardPropertyHeight * 2f;
-            float buttonX = position.width - buttonWidth / 2f;
+            float buttonX = position.xMax - buttonWidth;
             Rect buttonPosition = new Rect(buttonX, position.y, buttonWidth, _standardPropertyHeight);
 
             Rect propertyPosition = new Rect(position.x, position.y, position.width - buttonWidth - _standardSpace, _standardPropertyHeight);

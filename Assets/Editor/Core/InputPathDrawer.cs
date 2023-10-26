@@ -73,6 +73,7 @@ namespace CurlyEditor.Core
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
+            if (_manager == null) return _standardPropertyHeight;
             if (_manager.IsInputAssigned(_propertyValue)) return _standardPropertyHeight;
             return _standardPropertyHeight * 3f;
         }
