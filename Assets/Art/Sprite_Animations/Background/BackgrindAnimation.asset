@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d4f097a6a8738418f8af81f70350b1, type: 3}
+  m_Name: BackgrindAnimation
+  m_EditorClassIdentifier: 
+  <Frames>k__BackingField:
+  - {fileID: 1542845323, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: -487674844, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: 1692979369, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: 2139770821, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: -1946997444, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: -959050129, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: 1957410257, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: 1835158295, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: 511396823, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: -2110525510, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: -6608663, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: -1507532271, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: -221809097, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: 1580106865, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: -1385619388, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: -1754369217, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: -1668898124, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: -912256574, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: 1800793847, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  - {fileID: -1526952883, guid: 74c00d1d2c37da041881b5a6a3c9d1c7, type: 3}
+  <FrameCurve>k__BackingField:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  <Loop>k__BackingField: 1
+  <FramesPerSecond>k__BackingField: 8
