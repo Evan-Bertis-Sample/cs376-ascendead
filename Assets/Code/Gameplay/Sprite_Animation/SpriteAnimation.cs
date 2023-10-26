@@ -10,12 +10,14 @@ namespace Ascendead.Player
         [field: SerializeField] public List<Sprite> Frames { get; private set; }
         [field: SerializeField] public AnimationCurve FrameCurve { get; private set; }
         [field: SerializeField] public bool Loop { get; private set; }
-        [field: SerializeField] public float FrameTime { get; private set; }
+        [field: SerializeField] public int FramesPerSecond {get; private set;} = 12;
+
+        private float _frameTime = 0f;
 
         private bool _isNotBoundToTime = false;
         private float _time = 0f;
 
-        public void Play()
+        public void ResetAnimation()
         {
             _time = 0f;
         }
@@ -26,6 +28,12 @@ namespace Ascendead.Player
             if (clamp) value = Mathf.Clamp(value, minValue, maxValue);
             float t = Map(value, minValue, maxValue, 0f, 1f);
             _time = t;
+        }
+
+        public void RebindToTime(bool reset = true)
+        {
+            _isNotBoundToTime = false;
+            if (reset) ResetAnimation();
         }
 
         public Sprite GetFrame()
@@ -40,14 +48,18 @@ namespace Ascendead.Player
         public void UpdateTime()
         {
             if (_isNotBoundToTime)
-            {
-                _time += Time.deltaTime / FrameTime;
-                if (_time > 1f)
-                {
-                    if (Loop) _time = 0f;
-                    else _time = 1f;
-                }
-            }
+                return; // This is bound to a different type of variable, controlled by the user
+
+            if (Frames.Count == 0) return;
+
+            _frameTime = 1f / FramesPerSecond;
+            float animationLength = Frames.Count * _frameTime;
+
+            float progress = Mathf.InverseLerp(0, animationLength, Time.deltaTime);
+
+            _time += progress;
+            // _time += Time.deltaTime / _frameTime;
+            _time %= 1f;
         }
 
         public float Map(float val, float in1, float in2, float out1, float out2)

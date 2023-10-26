@@ -12,12 +12,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57d4f097a6a8738418f8af81f70350b1, type: 3}
   m_Name: PlayerRun
   m_EditorClassIdentifier: 
-  <Frames>k__BackingField: []
+  <Frames>k__BackingField:
+  - {fileID: -1860462562, guid: bb2136b50e373d643b930df2a58d4c78, type: 3}
+  - {fileID: 579880973, guid: bb2136b50e373d643b930df2a58d4c78, type: 3}
+  - {fileID: -2040814441, guid: bb2136b50e373d643b930df2a58d4c78, type: 3}
+  - {fileID: 1363727563, guid: bb2136b50e373d643b930df2a58d4c78, type: 3}
+  - {fileID: -1358217849, guid: bb2136b50e373d643b930df2a58d4c78, type: 3}
+  - {fileID: -294891686, guid: bb2136b50e373d643b930df2a58d4c78, type: 3}
+  - {fileID: 1999807832, guid: bb2136b50e373d643b930df2a58d4c78, type: 3}
+  - {fileID: -1030242879, guid: bb2136b50e373d643b930df2a58d4c78, type: 3}
   <FrameCurve>k__BackingField:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  <Loop>k__BackingField: 0
-  <FrameTime>k__BackingField: 0
+  <Loop>k__BackingField: 1
+  <FramesPerSecond>k__BackingField: 12

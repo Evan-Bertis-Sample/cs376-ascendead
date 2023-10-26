@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <LogToFile>k__BackingField: 1
   <MaxLogCount>k__BackingField: 3
-  <LoggingPath>k__BackingField: D:/Documents/Code/Personal-Projects/curly-unity-starter/Logs/CurlyLogs
+  <LoggingPath>k__BackingField: D:/Documents/University 2023-2024/1 Fall 2023/COMP_SCI
+    376/cs376-ascendead/Logs/CurlyLogs
   <LoggingEnumPath>k__BackingField: Assets/Code/Core/Logger/LoggingGroupID.cs
   <LoggingGroups>k__BackingField:
   - GroupName: App
@@ -23,17 +24,17 @@ MonoBehaviour:
   - GroupName: Gameplay
     LoggingColor: {r: 0.72156864, g: 0.49803922, b: 0.9137255, a: 1}
     EnableLogging: 1
-  _logContents: 'LOG SESSION (9/11/2023 9:48:46 PM)
+  _logContents: 'LOG SESSION (10/26/2023 2:36:00 PM)
 
     ----------------------------------------
 
     App
-    (21:48:46): Test Injection!
+    (14:36:00): Test Injection!
 
-    App (21:49:01): Quitting Sequence Started
+    App (14:36:06): Quitting Sequence Started
 
     App
-    (21:49:01): Finishing Logging Session
+    (14:36:06): Finishing Logging Session
 
 '
   Groups:

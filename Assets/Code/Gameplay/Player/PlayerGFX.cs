@@ -24,6 +24,7 @@ namespace Ascendead.Player
 
         [field: SerializeField] public PlayerAnimations Animations {get; private set;}
         [field: SerializeField] public PlayerController Controller {get; private set;}
+        [field: SerializeField] private bool _flipXBasedOnMovement = true;
 
         private Dictionary<Type, SpriteAnimation> _STATE_ANIMATION_MAP;
         private SpriteAnimation _currentAnimation;
@@ -57,8 +58,13 @@ namespace Ascendead.Player
         private void Update()
         {
             UpdateSpecialBindings();
-            IState<PlayerContext> state = Controller.PlayerState;
+            SetPlayerAnimationFrame();
+            SetPlayerOrientation();
+        }
 
+        private void SetPlayerAnimationFrame()
+        {
+            IState<PlayerContext> state = Controller.PlayerState;
             if (state == null) return;
 
             bool found = _STATE_ANIMATION_MAP.TryGetValue(state.GetType(), out SpriteAnimation animation);
@@ -66,18 +72,29 @@ namespace Ascendead.Player
 
             if (animation != _currentAnimation && animation != null)
             {
-                animation.Play();
+                animation.ResetAnimation();
                 _currentAnimation = animation;
             }
 
             if (_currentAnimation == null) return;
 
+            Debug.Log($"Playing animation: {_currentAnimation.name}");
+
             _currentAnimation.UpdateTime();
             Sprite frame = _currentAnimation.GetFrame();
 
             if (frame != null) _spriteRenderer.sprite = frame;
-
         }
 
+        private void SetPlayerOrientation()
+        {
+            if (!_flipXBasedOnMovement) return;
+
+            Vector2 movementInput = Controller.Context.MovementInput;
+            if (movementInput.x == 0f) return;
+
+            bool flipX = movementInput.x < 0f;
+            _spriteRenderer.flipX = flipX;
+        }
     }
 }

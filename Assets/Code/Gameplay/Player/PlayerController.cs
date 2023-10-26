@@ -15,6 +15,7 @@ namespace Ascendead.Player
         [System.Serializable]
         public class PlayerContext
         {
+            public string PlayerStateName;
             // Basic state fields
             public bool OnGround;
             public bool TouchingWall;
@@ -28,16 +29,18 @@ namespace Ascendead.Player
 
             // Cool reference fields
             public Rigidbody2D Rigidbody { get; private set; }
+            public GameObject PlayerObject { get; private set; }
 
-            public PlayerContext(PlayerConfiguration configuration, Rigidbody2D rigidbody)
+            public void SetReferences(PlayerConfiguration configuration, Rigidbody2D rigidbody, GameObject playerObject)
             {
                 Configuration = configuration;
                 Rigidbody = rigidbody;
+                PlayerObject = playerObject;
             }
         }
 
         [System.Serializable]
-        public struct PlayerInputs
+        public class PlayerInputs
         {
             [field: GlobalDefault] public InputManager InputManager { get; private set; }
             [field: SerializeField, InputPath] public string MovementInput { get; private set; }
@@ -45,21 +48,21 @@ namespace Ascendead.Player
         }
 
         [System.Serializable]
-        public struct PlayerConfiguration
+        public class PlayerConfiguration
         {
-            [field: Header("Player Feel")]
             [field: SerializeField] public float MovementSpeed { get; private set; }
             [field: SerializeField] public float JumpForce { get; private set; }
 
             [field: Header("Observation Configuration")]
             [field: SerializeField] public float GroundCheckDistance { get; private set; }
+            [field: SerializeField] public LayerMask GroundLayer { get; private set; }
         }
 
         public IState<PlayerContext> PlayerState => _playerStateMachine.NestedCurrentState();
 
         public Rigidbody2D Rigidbody { get; private set; }
-        [field: SerializeField] private PlayerContext _context;
-        [field: SerializeField] private PlayerInputs _playerInputs;
+        [field: SerializeField] public PlayerContext Context {get; private set;}
+        [field: SerializeField] public PlayerInputs InputSchema {get; private set;}
         [field: SerializeField] private PlayerConfiguration _playerConfiguration;
         [GlobalDefault] private InputManager _inputManager;
         private StateMachine<PlayerContext> _playerStateMachine;
@@ -69,7 +72,7 @@ namespace Ascendead.Player
         {
             CurlyCore.DependencyInjector.InjectDependencies(this);
             Rigidbody = GetComponent<Rigidbody2D>();
-            _context = new PlayerContext(_playerConfiguration, Rigidbody);
+            Context.SetReferences(_playerConfiguration, Rigidbody, this.gameObject);
             BuildStateMachine();
         }
 
@@ -82,7 +85,7 @@ namespace Ascendead.Player
             }
             ObserveContext();
             GetInput();
-            _playerStateMachine.OnLogic(_context);
+            _playerStateMachine.OnLogic(Context);
         }
 
         private void BuildStateMachine()
@@ -165,14 +168,16 @@ namespace Ascendead.Player
         private void ObserveContext()
         {
             // Observe the context for changes
-            _context.OnGround = Physics2D.Raycast(transform.position, Vector2.down, _context.Configuration.GroundCheckDistance);
+            Context.OnGround = Physics2D.Raycast(transform.position, Vector2.down, Context.Configuration.GroundCheckDistance, Context.Configuration.GroundLayer);
+            Debug.DrawLine(transform.position, transform.position + Vector3.down * Context.Configuration.GroundCheckDistance, Color.red);
+            Context.PlayerStateName = PlayerState.GetType().Name;
         }
 
         private void GetInput()
         {
             // Get input from the input manager
-            _context.MovementInput = _inputManager.ReadInput<Vector2>(_playerInputs.MovementInput);
-            _context.JumpInput = _inputManager.ReadInput<bool>(_playerInputs.JumpInput);
+            Context.MovementInput = _inputManager.ReadInput<Vector2>(InputSchema.MovementInput);
+            Context.JumpInput = _inputManager.ReadInput<float>(InputSchema.JumpInput) > 1;
         }
     }
 }
