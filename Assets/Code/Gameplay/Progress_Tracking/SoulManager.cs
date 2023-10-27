@@ -30,6 +30,10 @@ namespace Ascendead.Tracking
         public static SoulManager Instance { get; private set; }
         [field: SerializeField] private MetaSoulData _soulData = new MetaSoulData();
 
+        public delegate void SoulEvent(int soulChange);
+        public static event SoulEvent OnSoulCollected;
+        public static event SoulEvent OnSoulSpent;
+
         private const string SOUL_DATA_KEY = "SoulData";
 
         [GlobalDefault] private ProgressTracker _progressTracker;
@@ -62,6 +66,7 @@ namespace Ascendead.Tracking
         {
             Instance._soulData.SoulsCollected = Instance._soulData.SoulsCollected + soul.SoulValue;
             Instance._soulData.CollectedSouls.Add(soul.SoulID);
+            OnSoulCollected?.Invoke(soul.SoulValue);
             SaveSoulData();
         }
 
@@ -75,6 +80,7 @@ namespace Ascendead.Tracking
             if (GetSoulCount() < amount) return false;
 
             Instance._soulData.SoulsSpent = Instance._soulData.SoulsSpent + amount;
+            OnSoulSpent?.Invoke(amount);
             SaveSoulData();
             return true;
         }

@@ -12,13 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb3122746e06b224794d5c26e4397033, type: 3}
   m_Name: ProgressTracker
   m_EditorClassIdentifier: 
-  <Character>k__BackingField:
-    SoulsCollected: 0
-    UnlockedGrapplingHook: 0
-  <Meta>k__BackingField:
-    TotalSoulsCollected: 0
-    TotalSoulsSpent: 0
-    CollectedSoulIds: 
-    TotalFalls: 0
-    TotalPlaytime: 0
-  <LoadProgressOnBoot>k__BackingField: 1
+  <LoadProgressOnBoot>k__BackingField: 0

@@ -17,9 +17,9 @@ namespace Ascendead.Player
         private bool _isNotBoundToTime = false;
         private float _time = 0f;
 
-        public void ResetAnimation()
+        public void ResetAnimation(float timeValue = 0)
         {
-            _time = 0f;
+            _time = timeValue;
         }
 
         public void BindTimeValue(float value, float minValue, float maxValue, bool clamp = true)
