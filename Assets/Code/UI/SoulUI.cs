@@ -14,8 +14,10 @@ namespace Ascendead.UI
 
         [field: SerializeField] private Color _collectColorModifier;
         [field: SerializeField] private Color _spendColorModifier;
+        [field: SerializeField] private float _colorChangeSpeed = 10f;
 
         private int _soulCount;
+        private Color _goalColor = Color.white;
 
         private void Start()
         {
@@ -30,16 +32,26 @@ namespace Ascendead.UI
             if (_soulCountText == null) return;
             _soulCount = SoulManager.GetSoulCount();
             _soulCountText.text = _soulCount.ToString();
+            UpdateIconColor();
+        }
+
+        private void UpdateIconColor()
+        {
+            if (_soulIcon == null) return;
+            _soulIcon.color = Color.Lerp(_soulIcon.color, _goalColor, _colorChangeSpeed * Time.deltaTime);
+
+            // slowly always return to white
+            _goalColor = Color.Lerp(_goalColor, Color.white, _colorChangeSpeed * Time.deltaTime);
         }
 
         private void OnSoulCollect(int soulAmount)
         {
-            
+            _goalColor = _collectColorModifier;   
         }
 
         private void OnSoulSpent(int soulAmount)
         {
-
+            _goalColor = _spendColorModifier;
         }
 
         private void OnDestroy()

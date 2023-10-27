@@ -24246,8 +24246,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _soulIcon: {fileID: 69146245}
   _soulCountText: {fileID: 2014824602}
-  _collectColorModifier: {r: 1, g: 1, b: 1, a: 1}
-  _spendColorModifier: {r: 1, g: 0, b: 0, a: 1}
+  _collectColorModifier: {r: 1, g: 0.55344284, b: 0, a: 1}
+  _spendColorModifier: {r: 0, g: 0, b: 0, a: 1}
+  _colorChangeSpeed: 10
 --- !u!114 &1959162262
 MonoBehaviour:
   m_ObjectHideFlags: 0
