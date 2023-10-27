@@ -20,6 +20,7 @@ namespace Ascendead.Player
             [field: SerializeField] public SpriteAnimation Fall {get; private set;}
             [field: SerializeField] public SpriteAnimation WallSlide {get; private set;}
             [field: SerializeField] public SpriteAnimation WallJump {get; private set;}
+            [field: SerializeField] public SpriteAnimation Land {get; private set;}
         }
 
         [field: SerializeField] public PlayerAnimations Animations {get; private set;}
@@ -46,13 +47,17 @@ namespace Ascendead.Player
                 { typeof(PlayerIdle), Animations.Idle },
                 { typeof(PlayerRun), Animations.Run },
                 { typeof(PlayerJump), Animations.Jump },
+                { typeof(PlayerFreefall), Animations.Fall },
+                { typeof(PlayerWallSlide), Animations.WallSlide},
+                { typeof(PlayerWallJump), Animations.WallJump},
+                { typeof(PlayerLand), Animations.Land}
             };
         }
 
         private void UpdateSpecialBindings()
         {
             // use this to bind sprite animations to specific floating point values
-            Animations.Jump.BindTimeValue(Controller.Rigidbody.velocity.y, 0f, 0f, false);
+            Animations.Jump.BindTimeValue(Controller.Rigidbody.velocity.y, 0f, -3f, true);
         }
 
         private void Update()

@@ -31,6 +31,12 @@ namespace CurlyUtility.DSA
         public IState<StateContextType> CurrentState { get; private set; }
 
         /// <summary>
+        /// The starting state of the state machine. This is mandatory before calling OnLogic().
+        /// </summary>
+        /// <value></value>
+        public IState<StateContextType> StartingState {get; private set;}
+
+        /// <summary>
         /// The current state that the state machine is in, including nested states, if the current state is a state machine
         /// </summary>
         public IState<StateContextType> NestedCurrentState()
@@ -94,6 +100,7 @@ namespace CurlyUtility.DSA
 
             if (CurrentState != null) return;
             CurrentState = state;
+            StartingState = state;
         }
 
         /// <summary>
@@ -197,6 +204,17 @@ namespace CurlyUtility.DSA
             return false;
         }
 
+        public void OnStateEnter()
+        {
+            CurrentState?.OnStateExit();
+            CurrentState = StartingState; // Set the current state to the starting state, just in case this is hierarchical
+        }
+
+        public bool IsReady()
+        {
+            return CurrentState.IsReady(); // we do not want to prematurely leave the state machine
+        }
+
         /// <summary>
         /// Performs the logic of the StateMachine. Call this whenever you would like to progress the state machine.
         /// This is usually called in the Update() method of a MonoBehaviour.
@@ -238,6 +256,11 @@ namespace CurlyUtility.DSA
         {
             if (state.IsReady() == false) return null; // Cannot transition yet
 
+            if (_stateMap.ContainsKey(state) == false) 
+            {
+                Debug.LogWarning($"State '{state}' does not have any transitions -- you are stuck forever. Cannot evaluate transitions.");
+                return null; // No transitions to evaluate
+            }
             var transitions = _stateMap[state].Keys;
 
             foreach (var transition in transitions)

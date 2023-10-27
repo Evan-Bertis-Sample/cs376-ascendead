@@ -10,35 +10,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57d4f097a6a8738418f8af81f70350b1, type: 3}
-  m_Name: PlayerJump
+  m_Name: PlayerFreefall
   m_EditorClassIdentifier: 
   <Frames>k__BackingField:
-  - {fileID: -1356525777, guid: 6bb0ffa1e2fe2984ea201cdd43207e3f, type: 3}
-  - {fileID: 744793268, guid: 6bb0ffa1e2fe2984ea201cdd43207e3f, type: 3}
-  - {fileID: 1841628468, guid: 31360fba00223d344a05b19bf4a1633a, type: 3}
+  - {fileID: 1990511262, guid: 40b8b4008b14a9f49a076f42f9b8adac, type: 3}
+  - {fileID: -1342065354, guid: 40b8b4008b14a9f49a076f42f9b8adac, type: 3}
+  - {fileID: 273393935, guid: 40b8b4008b14a9f49a076f42f9b8adac, type: 3}
   <FrameCurve>k__BackingField:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: -0.040787924
-      outSlope: -0.040787924
-      tangentMode: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.87285906
+      outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 3.4076195
-      outSlope: 3.4076195
-      tangentMode: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
       weightedMode: 0
-      inWeight: 0.08644116
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   <Loop>k__BackingField: 0
-  <FramesPerSecond>k__BackingField: 1
+  <FramesPerSecond>k__BackingField: 10

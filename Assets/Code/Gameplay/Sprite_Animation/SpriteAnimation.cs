@@ -8,7 +8,7 @@ namespace Ascendead.Player
     public class SpriteAnimation : ScriptableObject
     {
         [field: SerializeField] public List<Sprite> Frames { get; private set; }
-        [field: SerializeField] public AnimationCurve FrameCurve { get; private set; }
+        [field: SerializeField] public AnimationCurve FrameCurve { get; private set; } = AnimationCurve.Linear(0f, 0f, 1f, 1f);
         [field: SerializeField] public bool Loop { get; private set; }
         [field: SerializeField] public int FramesPerSecond {get; private set;} = 12;
 
@@ -28,6 +28,7 @@ namespace Ascendead.Player
             if (clamp) value = Mathf.Clamp(value, minValue, maxValue);
             float t = Map(value, minValue, maxValue, 0f, 1f);
             _time = t;
+            Debug.Log($"Bound to time value, original value: {value}, mapped value: {t}");
         }
 
         public void RebindToTime(bool reset = true)
