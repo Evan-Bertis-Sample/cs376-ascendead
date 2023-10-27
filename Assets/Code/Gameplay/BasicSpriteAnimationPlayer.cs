@@ -6,25 +6,22 @@ using UnityEngine;
 
 namespace Ascendead.Components
 {
-    [RequireComponent(typeof(SpriteRenderer))]
     public class BasicSpriteAnimationPlayer : MonoBehaviour
     {
         [field: SerializeField] public SpriteAnimation Animation { get; private set; }
         [field: SerializeField] public bool RandomizeStartTime { get; private set; } = false;
 
-
         private SpriteRenderer _spriteRenderer;
 
-        private void Start()
+        protected void Start()
         {
-            _spriteRenderer = GetComponent<SpriteRenderer>();
             float startTime = 0;
 
             if (Animation == null) throw new System.Exception("BasicSpriteAnimationPlayer has no animation assigned.");
 
             // copy the animation object
             Animation = Instantiate(Animation);
-            
+
             if (RandomizeStartTime) startTime = Random.Range(0f, 1f);
 
             Animation.ResetAnimation(startTime);
@@ -36,7 +33,14 @@ namespace Ascendead.Components
             Animation.UpdateTime();
 
             Sprite sprite = Animation.GetFrame();
-            if (sprite != null) _spriteRenderer.sprite = sprite;
+            if (sprite != null) SetSprite(sprite);
+        }
+
+        protected virtual void SetSprite(Sprite sprite)
+        {
+            if (_spriteRenderer == null) _spriteRenderer = GetComponent<SpriteRenderer>();
+            if (_spriteRenderer == null) throw new System.Exception("BasicSpriteAnimationPlayer has no SpriteRenderer component.");
+            _spriteRenderer.sprite = sprite;
         }
     }
 }
