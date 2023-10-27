@@ -425,33 +425,10 @@ MonoBehaviour:
   <GridSize>k__BackingField: {x: 30, y: 17}
   <GridOrigin>k__BackingField: {x: 0, y: 0.4735}
   <Target>k__BackingField: {fileID: 879011139}
-  <CameraPeekDistance>k__BackingField: 1
-  <CameraPeekSpeed>k__BackingField: 1
-  <CameraPeekCurve>k__BackingField:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  <CameraPeekInput>k__BackingField: 
+  <CameraPeekDistance>k__BackingField: 5
+  <CameraLerpSpeed>k__BackingField: 10
+  <CameraPeekInput>k__BackingField: Player/Movement
+  _gridIndex: {x: 0, y: 0}
 --- !u!1 &876880557
 GameObject:
   m_ObjectHideFlags: 0
@@ -6685,8 +6662,8 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    <JumpForce>k__BackingField: 10
-    <WallJumpForce>k__BackingField: 10
+    <JumpForce>k__BackingField: 20
+    <WallJumpForce>k__BackingField: 20
     <WallSlideFallReduction>k__BackingField: 0.25
     <JumpAngle>k__BackingField: 60
     <GroundCheckDistance>k__BackingField: 0.55
@@ -6724,7 +6701,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 2
+  m_GravityScale: 4
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

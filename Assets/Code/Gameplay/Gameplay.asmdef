@@ -1,0 +1,17 @@
+{
+    "name": "Gameplay",
+    "rootNamespace": "Ascendead",
+    "references": [
+        "GUID:32a810c4f2e87c24cb4c11a225c97445",
+        "GUID:8d71123879b899e4987953374246d528"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
