@@ -48,16 +48,22 @@ namespace CurlyCore.Saving
         public List<string> GetAllKeys()
         {
             List<string> filteredFiles = Directory
-                .EnumerateFiles(_SAVE_DIRECTORY, "*", SearchOption.TopDirectoryOnly)
-                .Where(file =>
-                {
-                    return Path.GetExtension(file) == SaveExtension;
-                })
+                .EnumerateFiles(_SAVE_DIRECTORY, $"*.{SaveExtension}", SearchOption.TopDirectoryOnly)
                 .Select(path =>
                 {
                     return Path.GetFileNameWithoutExtension(path);
                 })
                 .ToList();
+
+            for (int i = 0; i < filteredFiles.Count; i++)
+            {
+                filteredFiles[i] = filteredFiles[i].Replace($"{_SAVE_DIRECTORY}/", "");
+            }
+
+            foreach (string file in filteredFiles)
+            {
+                _logger.Log(Debugging.LoggingGroupID.APP, $"Found save file: {file}");
+            }
 
             return filteredFiles;
         }

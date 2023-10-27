@@ -39,6 +39,7 @@ namespace CurlyCore.Saving
         private static SaveHeader DeserializeFromText(Byte[] bytes)
         {
             string textRepresentation = Encoding.UTF8.GetString(bytes);
+            Debug.Log("deserializing save header : " + textRepresentation);
             SaveHeader deserializedHeader = JsonConvert.DeserializeObject<SaveHeader>(textRepresentation);
             return deserializedHeader;
         }
@@ -75,7 +76,7 @@ namespace CurlyCore.Saving
         private static int GetTextSerializationByteSize()
         {
             SaveHeader fake = new SaveHeader("FKE", SerializationType.TEXT);
-            return fake.Serialize().Length;
+            return fake.Serialize().Length-2;
         }
 
         public Byte[] Serialize()

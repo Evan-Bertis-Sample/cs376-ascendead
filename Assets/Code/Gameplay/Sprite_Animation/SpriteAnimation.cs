@@ -28,7 +28,7 @@ namespace Ascendead.Player
             if (clamp) value = Mathf.Clamp(value, minValue, maxValue);
             float t = Map(value, minValue, maxValue, 0f, 1f);
             _time = t;
-            Debug.Log($"Bound to time value, original value: {value}, mapped value: {t}");
+            // Debug.Log($"Bound to time value, original value: {value}, mapped value: {t}");
         }
 
         public void RebindToTime(bool reset = true)

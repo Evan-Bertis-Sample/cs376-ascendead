@@ -37,7 +37,7 @@ namespace Ascendead.Player
         public virtual float GetMoveSpeed(PlayerContext context, float timeInState)
         {
             float speed = context.Configuration.GroundMovementSpeed;
-            float acceleration = context.Configuration.AccelerationCurve.Evaluate(timeInState);
+            float acceleration = context.Configuration.AccelerationCurve.Evaluate(timeInState / context.Configuration.AccelerationTime);
 
             return speed * acceleration;
         }
@@ -48,7 +48,7 @@ namespace Ascendead.Player
         public override float GetMoveSpeed(PlayerContext context, float timeInState)
         {
             float speed = context.Configuration.AirMovementSpeed;
-            float acceleration = context.Configuration.AccelerationCurve.Evaluate(timeInState);
+            float acceleration = context.Configuration.AccelerationCurve.Evaluate(timeInState / context.Configuration.AccelerationTime);
 
             return speed * acceleration;
         }

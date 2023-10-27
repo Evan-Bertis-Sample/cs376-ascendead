@@ -18,16 +18,20 @@ namespace CurlyCore.Saving
         [field: SerializeField, SerializerID] public string DefaultSerializer {get; private set;}
         [field: SerializeField, EncryptorID] public string DefaultEncryptor {get; private set;}
 
+        public IDataStorage Storage => DataStorageFactory.CreateStorage(DefaultStorage);
+        public ISaveDataSerializer Serializer => SerializerFactory.CreateSerializer(DefaultSerializer);
+        public IEncryptor Encryptor => EncryptorFactory.CreateEncryptorFromID(DefaultEncryptor);
+
         // Runs on boot
         public override void OnBoot(App app, Scene scene)
         {
-            SaveData data = new SaveData();
-            data.Save("TestFact", 3);
+            // SaveData data = new SaveData();
+            // data.Save("TestFact", 3);
 
-            SaveUsingDefault(data, "test-default");
-            SaveData load = LoadUsingDefault("test-default");
-            int testLoad = load.Load("TestFact", -1);
-            Debug.Log($"Loaded {testLoad}");
+            // SaveUsingDefault(data, "test-default");
+            // SaveData load = LoadUsingDefault("test-default");
+            // int testLoad = load.Load("TestFact", -1);
+            // Debug.Log($"Loaded {testLoad}");
 
             DependencyInjector.InjectDependencies(this);
         }
@@ -115,6 +119,7 @@ namespace CurlyCore.Saving
                     SerializationType format = (SerializationType)dataReader.ReadInt32();
                     int headerSize = SaveHeader.GetByteSize(format);
                     byte[] headerBuffer = dataReader.ReadBytes(headerSize);
+                    
                     int bytesRead = headerBuffer.Length;
                     if (bytesRead != headerBuffer.Length)
                     {

@@ -14,7 +14,18 @@ namespace CurlyCore.Saving
             Debug.Log("loading");
             string json = System.Text.Encoding.UTF8.GetString(data);
             Debug.Log(json);
-            return JsonConvert.DeserializeObject<SaveData>(json);
+
+            try
+            {
+                FactDictionary facts = JsonConvert.DeserializeObject<FactDictionary>(json);
+                SaveData saveData = new SaveData(facts);
+                return saveData;
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+                return new SaveData();
+            }
         }
 
         public byte[] Save(SaveData toSave)
@@ -29,7 +40,7 @@ namespace CurlyCore.Saving
 
             settings.Converters.Insert(0, new FactDictionaryJsonConverter());
 
-            string jsonData = JsonConvert.SerializeObject(toSave, settings);
+            string jsonData = JsonConvert.SerializeObject(toSave.Facts, settings);
 
             return System.Text.Encoding.UTF8.GetBytes(jsonData);
         }
