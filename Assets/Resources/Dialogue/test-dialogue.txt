@@ -1,0 +1,44 @@
+# comment
+
+# Starting node
+Hi, my name is Bones.
+
+# First simple branch example
+[Branch]
+[Option("What's up?")]
+Nothing much!
+[Exit]
+
+[Option("My name is Skelly")]
+Nice to meet you Skelly!
+[Exit]
+
+# On exit, continues to main stream
+Anyway, I've heard of some scary things happening around here.
+
+
+# Nested Branching example
+[Branch("ASK ME")]
+[Option("What kind of things?")]
+Lots. There are souls and creeps wandering everywhere.
+
+[Branch]
+[Option("Tell me about the souls")]
+Yeah so the souls are looking for a way out of this place but can't find it.
+I heard that they are stuck here because they haven't felt inner peace.
+# exits back to ask me branch
+[Exit("ASK ME")]
+
+[Option("Tell me about the creeps)]
+They are just wierd...
+
+That's all I really have to say about them.
+[Exit("ASK ME)]
+
+[Option("Oh nevermind")]
+Okay...
+# Back to linear branch
+[Exit]
+
+Well, it was nice to meet you. Hope to see you again some time!
+

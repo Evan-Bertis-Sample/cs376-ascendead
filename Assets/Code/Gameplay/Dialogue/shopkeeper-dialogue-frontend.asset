@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4a3b19d3268aa14dba58d981f6c48ef, type: 3}
+  m_Name: shopkeeper-dialogue-frontend
+  m_EditorClassIdentifier: 
+  _dialoguePanelPrefab: {fileID: 7840230045938595981, guid: 9fac8036483c87049b96609627c9aafc, type: 3}
+  _choiceButtonPrefab: {fileID: 3925972334573180564, guid: ef8a98da82194c447a76cb7492894823, type: 3}
+  _canvasTransform: {fileID: 0}
+  _continuePrompt: Player/Interact

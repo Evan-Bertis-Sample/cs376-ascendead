@@ -13,5 +13,9 @@ namespace CurlyUtility
             while (condition() == false) await Task.Yield();
         }
 
+        public static IEnumerator TaskAsCoroutine(Task task)
+        {
+            while (!task.IsCompleted) yield return null;
+        }
     }
 }

@@ -25,7 +25,6 @@ namespace Ascendead.Player
         public void OnLogic(PlayerContext context)
         {
             _timeInState += Time.deltaTime;
-            Debug.Log("Moving player");
             Vector2 movementVector = context.MovementInput;
             float speed = GetMoveSpeed(context, _timeInState);
 

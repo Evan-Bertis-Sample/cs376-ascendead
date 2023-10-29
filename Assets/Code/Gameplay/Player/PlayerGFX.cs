@@ -83,7 +83,7 @@ namespace Ascendead.Player
 
             if (_currentAnimation == null) return;
 
-            Debug.Log($"Playing animation: {_currentAnimation.name}");
+            // Debug.Log($"Playing animation: {_currentAnimation.name}");
 
             _currentAnimation.UpdateTime();
             Sprite frame = _currentAnimation.GetFrame();
