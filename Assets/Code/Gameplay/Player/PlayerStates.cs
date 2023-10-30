@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Ascendead.Tracking;
+using Ascendead.UI;
 using CurlyCore;
 using CurlyCore.Audio;
 using CurlyUtility.DSA;
@@ -63,8 +65,11 @@ namespace Ascendead.Player
         protected PlayerContext _context;
         [GlobalDefault] protected AudioManager _audioManager;
 
+        private int _jumpCharges = 3;
+
         public void OnStateEnter()
         {
+            _jumpCharges = ChargeTracker.GetMaxCharges();
             _timeInState = 0f;
             _isHoldingInput = true;
             if (_audioManager == null) DependencyInjector.InjectDependencies(this);
@@ -80,6 +85,9 @@ namespace Ascendead.Player
             _context = context;
             _isHoldingInput = _context.JumpInput;
             _timeInState += Time.deltaTime;
+
+            // find charge state
+            JumpChargeUI.SetChargeLevel(GetJumpCharge(context));
         }
 
         public void OnStateExit()
@@ -97,11 +105,25 @@ namespace Ascendead.Player
             string audioSound = GetJumpSound(_context);
             if (audioSound != null || audioSound != "") _audioManager.PlayOneShot(audioSound, position: _context.Rigidbody.position);
             // _audioManager.PlayOneShot(GetJumpSound(_context), position :_context.Rigidbody.position);
+
+            JumpChargeUI.SetChargeLevel(0);
         }
 
         public virtual float GetJumpForce(PlayerContext context, float timeInState)
         {
-            return context.Configuration.JumpForce;
+            // calculate which jump charge to use 
+            if (_jumpCharges == 0) 
+                return context.Configuration.MinimumGroundJumpForce;
+
+            // based on the time in state, calculate the jump force
+            float jumpCharge = GetJumpCharge(context);
+            float jumpForce = context.Configuration.MinimumGroundJumpForce + jumpCharge * context.Configuration.JumpChargeMultiplierForce;
+            return jumpForce;
+        }
+
+        private int GetJumpCharge(PlayerContext context)
+        {
+            return Mathf.FloorToInt(_timeInState / (context.Configuration.JumpHoldTime / _jumpCharges));
         }
 
         public virtual Vector2 GetJumpDirection(PlayerContext context)

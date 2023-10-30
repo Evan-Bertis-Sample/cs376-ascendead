@@ -59,7 +59,9 @@ namespace Ascendead.Player
             [field: SerializeField] public float AirMovementSpeed { get; private set; } = 3.5f;
             [field: SerializeField] public AnimationCurve AccelerationCurve { get; private set; } = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
             [field: SerializeField] public float AccelerationTime { get; private set; } = 0.5f;
-            [field: SerializeField] public float JumpForce { get; private set; } = 5f;
+            [field: SerializeField] public float MinimumGroundJumpForce { get; private set; } = 15f;
+            [field: SerializeField] public float JumpChargeMultiplierForce {get; private set; } = 5f;
+            [field: SerializeField] public float JumpHoldTime {get; private set;} = 1f;
             [field: SerializeField] public float WallJumpForce { get; private set; } = 5f;
             [field: SerializeField] public float WallSlideFallReduction { get; private set; } = 0.25f;
             [field: SerializeField] public float JumpAngle { get; private set; } = 60f;
