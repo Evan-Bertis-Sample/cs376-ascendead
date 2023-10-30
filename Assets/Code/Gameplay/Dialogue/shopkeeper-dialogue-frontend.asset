@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4a3b19d3268aa14dba58d981f6c48ef, type: 3}
   m_Name: shopkeeper-dialogue-frontend
   m_EditorClassIdentifier: 
-  _dialoguePanelPrefab: {fileID: 7840230045938595981, guid: 9fac8036483c87049b96609627c9aafc, type: 3}
+  _frontendComponent: {fileID: 3294174006082317327, guid: 9fac8036483c87049b96609627c9aafc, type: 3}
   _choiceButtonPrefab: {fileID: 3925972334573180564, guid: ef8a98da82194c447a76cb7492894823, type: 3}
   _canvasTransform: {fileID: 0}
   _continuePrompt: Player/Interact
   _typwriterSpeed: 30
+  _panelEnterPosition: {x: 0, y: 80, z: 0}

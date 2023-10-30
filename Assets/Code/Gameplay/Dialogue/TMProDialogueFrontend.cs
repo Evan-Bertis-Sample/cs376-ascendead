@@ -15,20 +15,20 @@ namespace Ascendead.Dialogue
     [CreateAssetMenu(menuName = "Ascendead/Dialogue Frontend/TMPro", fileName = "TMProDialogueFrontend")]
     public class TMPDialogueFrontend : DialogueFrontendObject
     {
-        [SerializeField] private GameObject _dialoguePanelPrefab;
+        [SerializeField] private TMPDialogueFrontendComponent _frontendComponent;
         [SerializeField] private GameObject _choiceButtonPrefab;
         [SerializeField] private Transform _canvasTransform; // Assign the canvas transform
         [SerializeField, InputPath] private string _continuePrompt;
         [SerializeField] private float _typwriterSpeed = 10f; // Characters per second
+        [SerializeField] private Vector3 _panelEnterPosition;
 
-        private GameObject _dialoguePanelInstance;
-        private TextMeshProUGUI _dialogueText;
-        private VerticalLayoutGroup _choicesLayoutGroup;
+        private TMPDialogueFrontendComponent _dialoguePanelInstance;
+        private RectTransform _dialoguePanelRectTransform;
         [GlobalDefault] private InputManager _inputManager;
 
         private TaskCompletionSource<int> choiceMadeCompletionSource;
 
-        public override async Task BeginDialogue()
+        public override async Task BeginDialogue(string characterName)
         {
             if (_inputManager == null) DependencyInjector.InjectDependencies(this);
 
@@ -40,9 +40,10 @@ namespace Ascendead.Dialogue
                 return;
             }
 
-            _dialoguePanelInstance = GameObject.Instantiate(_dialoguePanelPrefab, _canvasTransform);
-            _dialogueText = _dialoguePanelInstance.GetComponentInChildren<TextMeshProUGUI>();
-            _choicesLayoutGroup = _dialoguePanelInstance.GetComponentInChildren<VerticalLayoutGroup>();
+            _dialoguePanelInstance = GameObject.Instantiate(_frontendComponent, _canvasTransform);
+            _dialoguePanelInstance.CharacterNameText.text = characterName;
+            _dialoguePanelRectTransform = _dialoguePanelInstance.GetComponent<RectTransform>();
+            _dialoguePanelRectTransform.localPosition = _panelEnterPosition;
 
             // Animate panel entering screen
             // ... (Implement the desired animation logic here)
@@ -50,42 +51,47 @@ namespace Ascendead.Dialogue
             await Task.Yield();
         }
 
-        public override async Task<int> DisplayNode(DialogueNode node, string characterName)
+        public override async Task<int> DisplayNode(DialogueNode node)
         {
             switch (node.Type)
             {
                 case DialogueNode.NodeType.Content:
                     // just display the content
                     HideOptions();
-                    await Typewriter.ApplyTo(_dialogueText, $"{characterName}: {node.Content}", _typwriterSpeed, inputManager: _inputManager, inputPrompt: _continuePrompt);
+                    await Typewriter.ApplyTo(_dialoguePanelInstance.DialogueText, node.Content, _typwriterSpeed, inputManager: _inputManager, inputPrompt: _continuePrompt);
                     // Wait for continue prompt
-                    await TaskUtility.WaitUntil(() =>
+
+                    if (node.Children.Count > 0 && node.Children[0].Type != DialogueNode.NodeType.Branch)
                     {
-                        // Debug.Log("Waiting for continue prompt");
-                        return _inputManager.GetInputDown(_continuePrompt);
-                    });
+                        await TaskUtility.WaitUntil(() =>
+                        {
+                            // Debug.Log("Waiting for continue prompt");
+                            return _inputManager.GetInputDown(_continuePrompt);
+                        });
+                    }
                     break;
                 case DialogueNode.NodeType.Branch:
                     // keep the text on screen, but show the options
                     Debug.Log("TMProDialogueFrontend : Displaying Branch!");
-                    List<object> options = node.Parameters;
-                    
+                    List<DialogueNode> options = node.Children;
+
                     Debug.Log($"Branch : Showing {options.Count} options!");
                     // show the layout group
-                    _choicesLayoutGroup.gameObject.SetActive(true);
+                    _dialoguePanelInstance.ChoicesLayoutGroup.gameObject.SetActive(true);
 
                     for (int i = 0; i < options.Count; i++)
                     {
-                        var choice = GameObject.Instantiate(_choiceButtonPrefab, _choicesLayoutGroup.transform);
+                        var choice = GameObject.Instantiate(_choiceButtonPrefab, _dialoguePanelInstance.ChoicesLayoutGroup.transform);
                         var choiceText = choice.GetComponentInChildren<TextMeshProUGUI>();
                         var button = choice.GetComponent<Button>();
 
-                        choiceText.text = (string)options[i];
+                        choiceText.text = options[i].Parameters[0] as string;
                         int choiceIndex = i;
                         button.onClick.AddListener(() => ChooseOption(choiceIndex));
                     }
 
                     choiceMadeCompletionSource = new TaskCompletionSource<int>();
+
                     return await choiceMadeCompletionSource.Task;
                 case DialogueNode.NodeType.Option:
                     // we should never get here
@@ -103,13 +109,13 @@ namespace Ascendead.Dialogue
         private void HideOptions()
         {
             // delete all the buttons
-            foreach (Transform child in _choicesLayoutGroup.transform)
+            foreach (Transform child in _dialoguePanelInstance.ChoicesLayoutGroup.transform)
             {
                 GameObject.Destroy(child.gameObject);
             }
 
             // hide the layout group
-            _choicesLayoutGroup.gameObject.SetActive(false);
+            _dialoguePanelInstance.ChoicesLayoutGroup.gameObject.SetActive(false);
         }
 
 

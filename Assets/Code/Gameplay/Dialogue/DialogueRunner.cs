@@ -38,7 +38,7 @@ namespace Ascendead.Dialogue
             }
 
             Debug.Log("Beginning Dialogue");
-            Task beginDialogueTask = dialogueFrontend.BeginDialogue();
+            Task beginDialogueTask = dialogueFrontend.BeginDialogue(_characterName);
             while (!beginDialogueTask.IsCompleted) yield return null;
 
             Debug.Log("Running Dialogue");
@@ -69,7 +69,7 @@ namespace Ascendead.Dialogue
             {
                 case DialogueNode.NodeType.Branch:
                     Debug.Log("Displaying dialogue node -- branch");
-                    choiceIndex = await dialogueFrontend.DisplayNode(node, _characterName);
+                    choiceIndex = await dialogueFrontend.DisplayNode(node);
                     if (choiceIndex == -1)
                     {
                         Debug.LogError("No valid option was chosen!");
@@ -90,12 +90,12 @@ namespace Ascendead.Dialogue
                     break;
                 case DialogueNode.NodeType.Exit:
                     Debug.Log("Displaying dialogue node -- exit");
-                    choiceIndex = await dialogueFrontend.DisplayNode(node, _characterName);
+                    choiceIndex = await dialogueFrontend.DisplayNode(node);
                     await TraverseDialogue(node.Children[0]); // just go on to the next node
                     break;
                 default:
                     Debug.Log("Displaying dialogue node -- standard text");
-                    choiceIndex = await dialogueFrontend.DisplayNode(node, _characterName);
+                    choiceIndex = await dialogueFrontend.DisplayNode(node);
                     await TraverseDialogue(node.Children[0]);
                     break;
             }
