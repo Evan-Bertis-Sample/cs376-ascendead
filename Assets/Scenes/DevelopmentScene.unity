@@ -708,7 +708,7 @@ MonoBehaviour:
     <Fall>k__BackingField: {fileID: 11400000, guid: 83c21d9bcbe535a4f8d56c93f4bddd78, type: 2}
     <WallSlide>k__BackingField: {fileID: 0}
     <WallJump>k__BackingField: {fileID: 0}
-    <Land>k__BackingField: {fileID: 0}
+    <Land>k__BackingField: {fileID: 11400000, guid: c36bd7e9b4055ed4ca724b9c8f33be62, type: 2}
   <Controller>k__BackingField: {fileID: 879011138}
   _flipXBasedOnMovement: 1
 --- !u!212 &353021296
@@ -18657,6 +18657,7 @@ MonoBehaviour:
     PlayerStateName: 
     OnGround: 0
     OnWall: 0
+    GroundCollisionVelocity: 0
     MovementInput: {x: 0, y: 0}
     JumpInput: 0
     TimeHoldingJump: 0
@@ -18695,6 +18696,7 @@ MonoBehaviour:
     <WallJumpForce>k__BackingField: 20
     <WallSlideFallReduction>k__BackingField: 0.25
     <JumpAngle>k__BackingField: 60
+    <HardLandPunishmentTime>k__BackingField: 0.25
     <JumpAudio>k__BackingField: Assets/Audio/SoundFX/Jump.wav
     <LandAudio>k__BackingField: Assets/Audio/SoundFX/Land.wav
     <WallJumpAudio>k__BackingField: Assets/Audio/SoundFX/Jump.wav

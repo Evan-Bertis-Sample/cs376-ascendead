@@ -20,12 +20,13 @@ namespace CurlyCore.Audio
         [field: SerializeField] public float FlatVolumeMultiplier {get; private set;} = 1f;
         [field: SerializeField] public Range PitchMultiplerRange {get; private set;}
         [field: SerializeField] public Range VolumeMultiplierRange {get; private set;}
+        [field: SerializeField] public bool Loop {get; private set;} = false;
 
         public void ApplyOverride(AudioSource source)
         {
             if (UseRandomPitch) source.pitch = GetRandomInRange(PitchMultiplerRange);
             if (UseRandomVolume) source.volume = GetRandomInRange(VolumeMultiplierRange) * FlatVolumeMultiplier;
-
+            source.loop = Loop;
         }
 
         private float GetRandomInRange(Range range)

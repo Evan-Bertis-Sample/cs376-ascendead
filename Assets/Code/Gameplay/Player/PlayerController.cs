@@ -22,6 +22,7 @@ namespace Ascendead.Player
             public bool OnGround;
             public enum TouchingWall { None, Left, Right, Both }
             public TouchingWall OnWall;
+            public float GroundCollisionVelocity;
 
             // Input fields
             public Vector2 MovementInput;
@@ -62,6 +63,7 @@ namespace Ascendead.Player
             [field: SerializeField] public float WallJumpForce { get; private set; } = 5f;
             [field: SerializeField] public float WallSlideFallReduction { get; private set; } = 0.25f;
             [field: SerializeField] public float JumpAngle { get; private set; } = 60f;
+            [field: SerializeField] public float HardLandPunishmentTime { get; private set; } = 0.5f;
 
             [field: Header("Audio Clips")]
             [field: SerializeField, AudioPath] public string JumpAudio { get; private set; }
@@ -156,12 +158,16 @@ namespace Ascendead.Player
             LambdaTransition<PlayerContext> landToIdle = new LambdaTransition<PlayerContext>("Land to Idle");
             landToIdle.SetTransitionCondition(x => true);
 
+            LambdaTransition<PlayerContext> idleToLand = new LambdaTransition<PlayerContext>("Idle to Land");
+            idleToLand.SetTransitionCondition(x => x.GroundCollisionVelocity < landState.MinimumCollisionVelocity);
+
             groundStateMachine.AddTransition(idleState, runState, idleToRunTransition);
             groundStateMachine.AddTransition(runState, idleState, runToIdleTransition);
             groundStateMachine.AddTransition(idleState, jumpState, toJump);
             groundStateMachine.AddTransition(runState, jumpState, toJump);
             groundStateMachine.AddTransition(jumpState, landState, jumpToLand);
             groundStateMachine.AddTransition(landState, idleState, landToIdle);
+            groundStateMachine.AddTransition(idleState, landState, idleToLand);
 
             groundStateMachine.SetStartingState(idleState);
 
@@ -249,12 +255,24 @@ namespace Ascendead.Player
             }
         }
 
-
         private void GetInput()
         {
             // Get input from the input manager
             Context.MovementInput = _inputManager.ReadInput<Vector2>(InputSchema.MovementInput);
             Context.JumpInput = _inputManager.ReadInput<float>(InputSchema.JumpInput) > 0;
+        }
+
+        /// <summary>
+        /// Sent when an incoming collider makes contact with this object's
+        /// collider (2D physics only).
+        /// </summary>
+        /// <param name="other">The Collision2D data associated with this collision.</param>
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            {
+                Context.GroundCollisionVelocity = -other.relativeVelocity.y;
+            }
         }
     }
 }

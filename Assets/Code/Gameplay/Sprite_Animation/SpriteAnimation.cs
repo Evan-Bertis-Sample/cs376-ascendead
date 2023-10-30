@@ -60,7 +60,7 @@ namespace Ascendead.Player
 
             _time += progress;
             // _time += Time.deltaTime / _frameTime;
-            _time %= 1f;
+            if (Loop) _time %= 1f;
         }
 
         public float Map(float val, float in1, float in2, float out1, float out2)

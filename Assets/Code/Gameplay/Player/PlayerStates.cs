@@ -95,7 +95,7 @@ namespace Ascendead.Player
 
             // play the jump sound
             string audioSound = GetJumpSound(_context);
-            if (audioSound != null || audioSound != "") _audioManager.PlayOneShot(audioSound, position :_context.Rigidbody.position);
+            if (audioSound != null || audioSound != "") _audioManager.PlayOneShot(audioSound, position: _context.Rigidbody.position);
             // _audioManager.PlayOneShot(GetJumpSound(_context), position :_context.Rigidbody.position);
         }
 
@@ -189,6 +189,53 @@ namespace Ascendead.Player
 
     public class PlayerLand : IState<PlayerContext>
     {
+        public float MinimumCollisionVelocity = -20f;
+        private float _timeInState = 0f;
+        private bool _isReady = false;
 
+        [GlobalDefault] private AudioManager _audioManager;
+
+        public void OnStateEnter()
+        {
+            _timeInState = 0f;
+            if (_audioManager == null) DependencyInjector.InjectDependencies(this);
+            _isReady = false;
+        }
+
+        public bool IsReady()
+        {
+            return _isReady;
+        }
+
+        public void OnLogic(PlayerContext context)
+        {
+            if (context.OnGround == false)
+            {
+                context.GroundCollisionVelocity = 0;
+                _isReady = true;
+                return;
+            }
+            
+            if (_timeInState == 0f)
+            {
+                // first frame
+                if (context.GroundCollisionVelocity > MinimumCollisionVelocity)
+                {
+                    context.GroundCollisionVelocity = 0;
+                    _isReady = true;
+                    return;
+                }
+
+                _audioManager.PlayOneShot(context.Configuration.LandAudio, position: context.Rigidbody.position);
+            }
+
+            context.GroundCollisionVelocity = 0;
+            _timeInState += Time.deltaTime;
+
+            if (_timeInState >= context.Configuration.HardLandPunishmentTime)
+            {
+                _isReady = true;
+            }
+        }
     }
 }
