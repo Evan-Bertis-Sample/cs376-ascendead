@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -30,7 +31,9 @@ namespace Ascendead.Dialogue
 
             Dictionary<string, DialogueNode> namedBranches = new Dictionary<string, DialogueNode>();
             Stack<DialogueNode> nodeStack = new Stack<DialogueNode>();
-            DialogueNode currentNode = null;
+            Stack<DialogueNode> branchStack = new Stack<DialogueNode>();
+            List<DialogueNode> exitsToResolve = new List<DialogueNode>();
+            DialogueNode currentOptionBuilding = null;
 
             foreach (string line in lines)
             {
@@ -39,73 +42,143 @@ namespace Ascendead.Dialogue
 
                 Debug.Log("Parsing line: " + trimmed);
 
-                if (IsMeta(trimmed)) // [] brackets
+                DialogueNode node;
+                if (IsMeta(trimmed))
                 {
-                    DialogueNode newNode = HandleMetaToken(trimmed);
-                    if (currentNode != null)
-                    {
-                        currentNode.Children.Add(newNode);
-                    }
-                    else
-                    {
-                        // This must be the root node
-                        Root = newNode;
-                    }
+                    // handle meta commands
+                    node = BuildMetaNode(trimmed);
+                }
+                else
+                {
+                    // this is just a dialogue node
+                    node = new DialogueNode(trimmed, new List<DialogueNode>(), null);
+                }
 
-                    // If it's a branch or an option, update the currentNode
-                    if (newNode.IsMeta && (newNode.Content == "Branch" || newNode.Content == "Option"))
-                    {
-                        // If the branch is named, add it to the dictionary
-                        if (newNode.Parameters.Count > 0 && newNode.Parameters[0] is string branchName)
+                // check if this is the first node
+                if (Root == null && node.Type != DialogueNode.NodeType.Content)
+                {
+                    Debug.LogError("Dialogue tree has a meta command before the first content node, quitting.");
+                    return;
+                }
+                if (Root == null && node.Type == DialogueNode.NodeType.Content)
+                {
+                    // this is the first node, so we should set it as the root
+                    Root = node;
+                    nodeStack.Push(node);
+                    continue;
+                }
+
+                // Now we have a node, that isn't the first, we need to add it to the tree
+                // But first, we should do some checks on the token type
+
+                switch (node.Type)
+                {
+                    case DialogueNode.NodeType.Content:
+                        // this is a content node, so we should add it to the current node
+                        if (exitsToResolve.Count > 0 && currentOptionBuilding == null)
                         {
-                            namedBranches[branchName] = newNode;
+                            Debug.Log($"Resolving {exitsToResolve.Count} Exits!");
+                            foreach (DialogueNode exit in exitsToResolve)
+                                exit.Children.Add(node);
+                            
+                            exitsToResolve.Clear();
                         }
-
-                        if (currentNode != null)
+                        else
+                            nodeStack.Peek().Children.Add(node);
+                        nodeStack.Push(node);
+                        break;
+                    case DialogueNode.NodeType.Branch:
+                        // we are creating a branch, so we should do nothing, and wait for the next node
+                        // except we should add this node to the named branches
+                        // check if the branch has a name
+                        nodeStack.Peek().Children.Add(node);
+                        branchStack.Push(node);
+                        if (node.Parameters == null || node.Parameters.Count == 0)
                         {
-                            currentNode.Children.Add(newNode);
+                            break;
+                        }
+                        string branchName = (string)node.Parameters[0];
+                        namedBranches.Add(branchName, node);
+                        break;
+                    case DialogueNode.NodeType.Option:
+                        // we are adding options to a branch, so we should add this node to the branch
+                        // now we should just add the option to whatever the last node in the stack was
+                        branchStack.TryPeek(out DialogueNode branch);
+                        if (branch == null)
+                        {
+                            Debug.LogError("Dialogue tree has an option node without a branch, quitting.");
+                            return;
+                        }
+                        branch.Children.Add(node);
+                        nodeStack.Push(node); // we should push this node onto the stack, so that the next node will be added to this one
+                        currentOptionBuilding = node;
+                        break;
+                    case DialogueNode.NodeType.Event:
+                        // This is just a content node
+                        nodeStack.Peek().Children.Add(node);
+                        nodeStack.Push(node);
+                        break;
+                    case DialogueNode.NodeType.Exit:
+                        // we should go back a branch
+                        if (node.Parameters != null && node.Parameters.Count > 0)
+                        {
+                            // then we should go back to a named branch
+                            string branchToGoBackTo = (string)node.Parameters[0];
+                            // pop the branch stack until we find the branch
+                            while (branchStack.TryPop(out DialogueNode poppedBranch))
+                            {
+                                if (poppedBranch == null)
+                                {
+                                    Debug.LogError("Dialogue tree has an exit node without a branch!.");
+                                    return;
+                                }
+                                if (poppedBranch == namedBranches[branchToGoBackTo])
+                                {
+                                    // we found the branch, so we should stop popping
+                                    // set this branch as the child of this node
+                                    node.Children.Add(poppedBranch);
+                                    branchStack.Push(poppedBranch); // we actually didn't want to remove this one
+                                    // also set this to be the current node
+                                    break;
+                                }
+                            }
                         }
                         else
                         {
-                            Root = newNode;
+                            // we want to connect this to the next content node in the line
+                            exitsToResolve.Add(node);
                         }
 
-                        nodeStack.Push(currentNode);
-                        currentNode = newNode;
-                    }
-                    else if (newNode.IsMeta && newNode.Content == "Exit")
-                    {
-                        if (newNode.Parameters.Count > 0 && newNode.Parameters[0] is string && namedBranches.ContainsKey((string)newNode.Parameters[0]))
-                        {
-                            currentNode = namedBranches[(string)newNode.Parameters[0]];
-                            continue;
-                        }
-
-                        currentNode = nodeStack.Count > 0 ? nodeStack.Pop() : null;
-                        if (currentNode == null)
-                        {
-                            Debug.LogError("Dialogue tree has an exit node without a branch or option node, quitting.");
-                            return;
-                        }
-
-                    }
-                }
-                else // Dialogue
-                {
-                    // This is a dialogue node
-                    DialogueNode dialogueNode = new DialogueNode(trimmed, new List<DialogueNode>(), currentNode);
-                    if (currentNode != null)
-                    {
-                        currentNode.Children.Add(dialogueNode);
-                    }
-                    else
-                    {
-                        // this must be our root node
-                        Root = dialogueNode;
-                        currentNode = dialogueNode;
-                    }
+                        // now we should add this node to the previous node
+                        nodeStack.Peek().Children.Add(node);
+                        currentOptionBuilding = null;
+                        break;
                 }
             }
+            Debug.Log(PrintTree());
+        }
+
+        private string PrintTree(DialogueNode node = null, int indentLevel = 0)
+        {
+            // print the tree
+            if (node == null && indentLevel == 0) node = Root;
+            string message = "";
+
+            if (node == null) return message;
+
+            // if (node.Type == DialogueNode.NodeType.Exit) return message;
+
+            string typename = node.Type.ToString();
+            message += new string(' ', indentLevel * 4);
+            message += typename + ": ";
+            message += node.Content;
+            message += "\n";
+
+            if (node.Type == DialogueNode.NodeType.Option || node.Type == DialogueNode.NodeType.Branch) indentLevel++;
+            foreach (var child in node.Children)
+                message += PrintTree(child, indentLevel);
+
+            return message;
         }
 
         private bool IsMeta(string line)
@@ -113,7 +186,7 @@ namespace Ascendead.Dialogue
             return line[0] == '[' && line[line.Length - 1] == ']';
         }
 
-        private DialogueNode HandleMetaToken(string token)
+        private DialogueNode BuildMetaNode(string token)
         {
             // tokens should look like this [command(parameters)] or [command]
             // remove this
@@ -136,7 +209,8 @@ namespace Ascendead.Dialogue
 
             if (!command.Contains("(") && !command.Contains(")"))
             {
-                return new DialogueNode(command, new List<DialogueNode>(), null, true, new List<object>());
+                // this is a command with no parameters
+                return new DialogueNode(DialogueNode.GetNodeType(command), new List<DialogueNode>(), null);
             }
 
             string paramsAll = token.Substring(token.IndexOf('(') + 1, token.IndexOf(')') - token.IndexOf('(') - 1);
@@ -147,7 +221,8 @@ namespace Ascendead.Dialogue
             {
                 paremeters[i] = paremeters[i].Trim();
             }
-
+            string commandName = command.Substring(0, command.IndexOf('('));
+            DialogueNode.NodeType nodeType = DialogueNode.GetNodeType(commandName);
             List<object> parameterObject = new List<object>();
             foreach (string parameter in paremeters)
             {
@@ -155,7 +230,7 @@ namespace Ascendead.Dialogue
             }
 
             // now build the node
-            DialogueNode node = new DialogueNode(command, new List<DialogueNode>(), null, true, parameterObject); // TODO: Implement parenting stuff
+            DialogueNode node = new DialogueNode(nodeType, new List<DialogueNode>(), null, parameterObject);
             return node;
         }
 

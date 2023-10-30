@@ -3,6 +3,8 @@
 # Starting node
 Hi, my name is Bones.
 
+I'm a shopkeeper! Buy things from me, if you dare!
+
 # First simple branch example
 [Branch]
 [Option("What's up?")]

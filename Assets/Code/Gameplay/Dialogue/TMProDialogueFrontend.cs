@@ -8,6 +8,7 @@ using CurlyCore.Input;
 using CurlyUtility;
 using CurlyCore;
 using UnityEngine.InputSystem;
+using UnityEditor.Experimental.GraphView;
 
 namespace Ascendead.Dialogue
 {
@@ -31,7 +32,8 @@ namespace Ascendead.Dialogue
         {
             if (_inputManager == null) DependencyInjector.InjectDependencies(this);
 
-            _canvasTransform = GameObject.FindObjectOfType<Canvas>()?.transform;
+            _canvasTransform = GameObject.FindGameObjectWithTag("GameHUD").transform;
+
             if (_canvasTransform == null)
             {
                 Debug.LogError("Canvas transform is not set.");
@@ -50,42 +52,68 @@ namespace Ascendead.Dialogue
 
         public override async Task<int> DisplayNode(DialogueNode node, string characterName)
         {
-            // Display node content
-            await Typewriter.ApplyTo(_dialogueText, $"{characterName}: {node.Content}", _typwriterSpeed, inputManager: _inputManager, inputPrompt: _continuePrompt);
 
-            // Clear previous choices
+            switch (node.Type)
+            {
+                case DialogueNode.NodeType.Content:
+                    // just display the content
+                    HideOptions();
+                    await Typewriter.ApplyTo(_dialogueText, $"{characterName}: {node.Content}", _typwriterSpeed, inputManager: _inputManager, inputPrompt: _continuePrompt);
+                    // Wait for continue prompt
+                    await TaskUtility.WaitUntil(() =>
+                    {
+                        // Debug.Log("Waiting for continue prompt");
+                        return _inputManager.GetInputDown(_continuePrompt);
+                    });
+
+                    await Task.Yield();
+                    break;
+                case DialogueNode.NodeType.Branch:
+                    // keep the text on screen, but show the options
+                    return await ShowOptions(node.Parameters);
+                case DialogueNode.NodeType.Option:
+                    // we should never get here
+                    break;
+                case DialogueNode.NodeType.Event:
+                    // we should never get here
+                    break;
+                case DialogueNode.NodeType.Exit:
+                    // we should also never get here
+                    break;
+            }
+            return await Task.FromResult(-1);
+        }
+
+        private void HideOptions()
+        {
+            // delete all the buttons
             foreach (Transform child in _choicesLayoutGroup.transform)
             {
                 GameObject.Destroy(child.gameObject);
             }
 
-            if (node.IsMeta && node.Content.Equals("Branch"))
+            // hide the layout group
+            _choicesLayoutGroup.gameObject.SetActive(false);
+        }
+
+        private async Task<int> ShowOptions(List<object> options)
+        {
+            // show the layout group
+            _choicesLayoutGroup.gameObject.SetActive(true);
+
+            for (int i = 0; i < options.Count; i++)
             {
-                for (int i = 0; i < node.Children.Count; i++)
-                {
-                    var choice = GameObject.Instantiate(_choiceButtonPrefab, _choicesLayoutGroup.transform);
-                    var choiceText = choice.GetComponentInChildren<TextMeshProUGUI>();
-                    var button = choice.GetComponent<Button>();
+                var choice = GameObject.Instantiate(_choiceButtonPrefab, _choicesLayoutGroup.transform);
+                var choiceText = choice.GetComponentInChildren<TextMeshProUGUI>();
+                var button = choice.GetComponent<Button>();
 
-                    choiceText.text = node.Children[i].Content;
-                    int choiceIndex = i;
-                    button.onClick.AddListener(() => ChooseOption(choiceIndex));
-                }
-
-                choiceMadeCompletionSource = new TaskCompletionSource<int>();
-                return await choiceMadeCompletionSource.Task;
-            }
-            else
-            {   
-                // Wait for continue prompt
-                await TaskUtility.WaitUntil(() =>
-                {
-                    Debug.Log("Waiting for continue prompt");
-                    return _inputManager.GetInputDown(_continuePrompt);
-                });
+                choiceText.text = (string)options[i];
+                int choiceIndex = i;
+                button.onClick.AddListener(() => ChooseOption(choiceIndex));
             }
 
-            return await Task.FromResult(-1);
+            choiceMadeCompletionSource = new TaskCompletionSource<int>();
+            return await choiceMadeCompletionSource.Task;
         }
 
         private void ChooseOption(int choiceIndex)

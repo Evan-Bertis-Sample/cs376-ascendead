@@ -56,19 +56,41 @@ namespace Ascendead.Dialogue
             if (node == null) return;
 
             int choiceIndex = -1; // Default value when there are no choices
+            Debug.Log($"Traversing dialogue node -- {node.Content}");
 
-            if (!node.IsMeta)
-            {
-                Debug.Log("Displaying dialogue node -- standard text");
-                choiceIndex = await dialogueFrontend.DisplayNode(node, _characterName);
-                await TraverseDialogue(node.Children[0]);
-            }
+            foreach (DialogueNode child in node.Children)
+                Debug.Log("Children: " + child.Content);
 
             // If there are choices, follow the choice path, otherwise, iterate through all children
-            if (node.IsMeta && node.Content.Equals("Branch") && choiceIndex != -1 && node.Children.Count > choiceIndex)
+            switch (node.Type)
             {
-                // Traverse the path of the chosen option
-                await TraverseDialogue(node.Children[choiceIndex]);
+                case DialogueNode.NodeType.Branch:
+                    Debug.Log("Displaying dialogue node -- branch");
+                    choiceIndex = await dialogueFrontend.DisplayNode(node, _characterName);
+                    await TraverseDialogue(node.Children[choiceIndex]);
+                    break;
+                case DialogueNode.NodeType.Option:
+                    Debug.Log("Displaying dialogue node -- option");
+                    await TraverseDialogue(node.Children[0]); // don't display this node, just move on
+                    break;
+                case DialogueNode.NodeType.Event:
+                    Debug.Log("Displaying dialogue node -- event");
+                    // we should fire off an event here
+                    // TODO: implement event firing
+                    await TraverseDialogue(node.Children[0]); // continue on
+                    // choiceIndex = await dialogueFrontend.DisplayNode(node, _characterName);
+                    // await TraverseDialogue(node.Children[0]);
+                    break;
+                case DialogueNode.NodeType.Exit:
+                    Debug.Log("Displaying dialogue node -- exit");
+                    choiceIndex = await dialogueFrontend.DisplayNode(node, _characterName);
+                    await TraverseDialogue(node.Children[0]); // just go on to the next node
+                    break;
+                default:
+                    Debug.Log("Displaying dialogue node -- standard text");
+                    choiceIndex = await dialogueFrontend.DisplayNode(node, _characterName);
+                    await TraverseDialogue(node.Children[0]);
+                    break;
             }
         }
     }

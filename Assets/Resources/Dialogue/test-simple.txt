@@ -1,0 +1,19 @@
+# comment
+
+# Starting node
+Hi, my name is Bones.
+
+I'm a shopkeeper! Buy things from me, if you dare!
+
+# First simple branch example
+[Branch]
+[Option("What's up?")]
+Nothing much!
+[Exit]
+
+[Option("My name is Skelly")]
+Nice to meet you Skelly!
+[Exit]
+
+# On exit, continues to main stream
+Anyway, I've heard of some scary things happening around here.

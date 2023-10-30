@@ -777,7 +777,7 @@ GameObject:
   - component: {fileID: 761452225}
   m_Layer: 5
   m_Name: GameHUD
-  m_TagString: Untagged
+  m_TagString: GameHUD
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -19105,7 +19105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae6541f9d5b7d54790330d065dee646, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dialoguePath: Assets/Resources/Dialogue/test-dialogue.txt
+  _dialoguePath: Assets/Resources/Dialogue/test-simple.txt
   _characterName: Skeeps
   dialogueFrontend: {fileID: 11400000, guid: 13ef6e952e74f244cb24fad2825288fb, type: 2}
 --- !u!61 &1083176514
