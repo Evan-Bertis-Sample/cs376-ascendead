@@ -186,13 +186,13 @@ namespace Ascendead.Player
             airStateMachine.AddState(wallJumpState);
 
             LambdaTransition<PlayerContext> toWallSlide = new LambdaTransition<PlayerContext>("To Wall Slide");
-            toWallSlide.SetTransitionCondition(x => (x.OnWall != PlayerContext.TouchingWall.None || x.OnWall != PlayerContext.TouchingWall.Both) && x.Rigidbody.velocity.y < 0f);
+            toWallSlide.SetTransitionCondition(x => (x.OnWall == PlayerContext.TouchingWall.Left || x.OnWall == PlayerContext.TouchingWall.Right) && x.Rigidbody.velocity.y < 0f);
 
             LambdaTransition<PlayerContext> cancelWallSlide = new LambdaTransition<PlayerContext>("Cancel Wall Slide");
             cancelWallSlide.SetTransitionCondition(x => x.MovementInput.y < 0f || x.Rigidbody.velocity.y >= 0f);
 
             LambdaTransition<PlayerContext> toFreefall = new LambdaTransition<PlayerContext>("To Freefall");
-            toFreefall.SetTransitionCondition(x => x.OnWall == PlayerContext.TouchingWall.None || x.OnWall == PlayerContext.TouchingWall.Both);
+            toFreefall.SetTransitionCondition(x => x.OnWall != PlayerContext.TouchingWall.Left &&  x.OnWall != PlayerContext.TouchingWall.Right);
 
             LambdaTransition<PlayerContext> wallSlideToWallJump = new LambdaTransition<PlayerContext>("Wall Slide to Wall Jump");
             wallSlideToWallJump.SetTransitionCondition(x => x.JumpInput && x.TimeHoldingJump == 0f);

@@ -95,6 +95,12 @@ namespace Ascendead.Player
         {
             if (!_flipXBasedOnMovement) return;
 
+            if (Controller.PlayerState is PlayerWallSlide)
+            {
+                _spriteRenderer.flipX = Controller.Context.OnWall == PlayerContext.TouchingWall.Left;
+                return;
+            }
+
             Vector2 movementInput = Controller.Context.MovementInput;
             if (movementInput.x == 0f) return;
 

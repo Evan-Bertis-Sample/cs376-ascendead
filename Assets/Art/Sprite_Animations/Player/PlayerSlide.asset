@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57d4f097a6a8738418f8af81f70350b1, type: 3}
-  m_Name: shopkeeper-idle
+  m_Name: PlayerSlide
   m_EditorClassIdentifier: 
   <Frames>k__BackingField:
-  - {fileID: 1607716267, guid: 1b5f081f12f34df4bad9918319c33585, type: 3}
-  - {fileID: 531600936, guid: 1b5f081f12f34df4bad9918319c33585, type: 3}
-  - {fileID: 1378592003, guid: 1b5f081f12f34df4bad9918319c33585, type: 3}
-  - {fileID: 1460394248, guid: 1b5f081f12f34df4bad9918319c33585, type: 3}
-  - {fileID: 1557760842, guid: 1b5f081f12f34df4bad9918319c33585, type: 3}
-  - {fileID: 204766337, guid: 1b5f081f12f34df4bad9918319c33585, type: 3}
+  - {fileID: 1146260178, guid: d629d5c061da2f54ea2e946c3e2528dd, type: 3}
+  - {fileID: -289241779, guid: d629d5c061da2f54ea2e946c3e2528dd, type: 3}
+  - {fileID: -362470282, guid: d629d5c061da2f54ea2e946c3e2528dd, type: 3}
+  - {fileID: 2027168340, guid: d629d5c061da2f54ea2e946c3e2528dd, type: 3}
+  - {fileID: -1039225404, guid: d629d5c061da2f54ea2e946c3e2528dd, type: 3}
+  - {fileID: -673650702, guid: d629d5c061da2f54ea2e946c3e2528dd, type: 3}
   <FrameCurve>k__BackingField:
     serializedVersion: 2
     m_Curve:

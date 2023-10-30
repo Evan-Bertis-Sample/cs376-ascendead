@@ -706,7 +706,7 @@ MonoBehaviour:
     <Run>k__BackingField: {fileID: 11400000, guid: ec23d48db48dfdf41a5e7da71d2847e8, type: 2}
     <Jump>k__BackingField: {fileID: 11400000, guid: 6a9f785074958564d8001a065573dadd, type: 2}
     <Fall>k__BackingField: {fileID: 11400000, guid: 83c21d9bcbe535a4f8d56c93f4bddd78, type: 2}
-    <WallSlide>k__BackingField: {fileID: 0}
+    <WallSlide>k__BackingField: {fileID: 11400000, guid: 61a94b2b726e25144898b50eb7577ac0, type: 2}
     <WallJump>k__BackingField: {fileID: 0}
     <Land>k__BackingField: {fileID: 11400000, guid: c36bd7e9b4055ed4ca724b9c8f33be62, type: 2}
   <Controller>k__BackingField: {fileID: 879011138}
