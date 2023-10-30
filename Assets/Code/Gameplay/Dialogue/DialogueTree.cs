@@ -40,7 +40,7 @@ namespace Ascendead.Dialogue
                 string trimmed = line.Trim();
                 if (trimmed.Length == 0 || trimmed[0] == '#') continue;
 
-                Debug.Log("Parsing line: " + trimmed);
+                // Debug.Log("Parsing line: " + trimmed);
 
                 DialogueNode node;
                 if (IsMeta(trimmed))

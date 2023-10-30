@@ -18,6 +18,9 @@ namespace Ascendead.Tracking
 
         private const string CHARGE_DATA_KEY = "ChargeData";
         [GlobalDefault] private ProgressTracker _progressTracker;
+
+        public delegate void ChargeEventHandler(int chargeLevel);
+        public static event ChargeEventHandler OnMaxLevelChange;
         
         private void Awake()
         {
@@ -46,6 +49,7 @@ namespace Ascendead.Tracking
         public static void SetMaxCharges(int newMax)
         {
             Instance._chargeData.MaxCharges = newMax;
+            OnMaxLevelChange?.Invoke(Instance._chargeData.MaxCharges);
             SaveChargeData();
         }
 

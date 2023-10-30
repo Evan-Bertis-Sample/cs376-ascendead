@@ -16,6 +16,9 @@ namespace Ascendead.Dialogue
 
         public DialogueFrontendObject dialogueFrontend;
 
+        public delegate void DialogueEventHandler(string eventName, object[] parameters);
+        public event DialogueEventHandler OnDialogueEvent;
+
         void Start()
         {
             Debug.Log($"DialogueRunner : Building dialogue tree from '{_dialoguePath}'"); // Log the path of the dialogue tree
@@ -84,6 +87,19 @@ namespace Ascendead.Dialogue
                     Debug.Log("Displaying dialogue node -- event");
                     // we should fire off an event here
                     // TODO: implement event firing
+                    // event name
+                    string eventName = node.Parameters[0] as string;
+                    // event parameters
+                    object[] parameters = new object[node.Parameters.Count - 1];
+                    if (parameters.Length > 0)
+                    {
+                        for (int i = 1; i < node.Parameters.Count; i++)
+                        {
+                            parameters[i - 1] = node.Parameters[i];
+                        }
+                    }
+                    Debug.Log("Firing DialogueEvent: " + eventName + " with parameters: " + parameters.Length + " parameters.");
+                    OnDialogueEvent?.Invoke(eventName, parameters);
                     await TraverseDialogue(node.Children[0]); // continue on
                     // choiceIndex = await dialogueFrontend.DisplayNode(node, _characterName);
                     // await TraverseDialogue(node.Children[0]);

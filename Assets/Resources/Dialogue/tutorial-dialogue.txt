@@ -20,3 +20,9 @@ I thought i was the only skelly around.
 The name is Skeeps, by the way.
 
 You are in the underworld.
+
+Well, I have a gift for you anyhow.
+
+[Event("UpgradeCharge", 5)]
+
+This should let you jump higher.

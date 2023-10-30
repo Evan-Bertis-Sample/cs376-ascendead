@@ -27,6 +27,7 @@ namespace Ascendead.UI
         {
             _maxCharges = ChargeTracker.GetMaxCharges();
             UpdgradeChargeLevel(_maxCharges);
+            ChargeTracker.OnMaxLevelChange += UpdgradeChargeLevel;
         }
 
         public static void SetChargeLevel(int chargeLevel)
