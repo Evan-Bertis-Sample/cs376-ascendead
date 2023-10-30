@@ -7,6 +7,7 @@ using CurlyCore.Input;
 using CurlyUtility.DSA;
 using CurlyCore;
 using Unity.VisualScripting;
+using CurlyCore.Audio;
 
 namespace Ascendead.Player
 {
@@ -61,6 +62,11 @@ namespace Ascendead.Player
             [field: SerializeField] public float WallJumpForce { get; private set; } = 5f;
             [field: SerializeField] public float WallSlideFallReduction { get; private set; } = 0.25f;
             [field: SerializeField] public float JumpAngle { get; private set; } = 60f;
+
+            [field: Header("Audio Clips")]
+            [field: SerializeField, AudioPath] public string JumpAudio { get; private set; }
+            [field: SerializeField, AudioPath] public string LandAudio { get; private set; }
+            [field: SerializeField, AudioPath] public string WallJumpAudio { get; private set; }
 
             [field: Header("Observation Configuration")]
             [field: SerializeField] public float GroundCheckDistance { get; private set; } = 0.5f;

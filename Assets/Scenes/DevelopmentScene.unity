@@ -325,6 +325,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <SoulID>k__BackingField: 0
   <SoulValue>k__BackingField: 1
+  <CollectionSound>k__BackingField: Assets/Audio/SoundFX/Ding.mp3
 --- !u!212 &165320741
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -587,6 +588,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <SoulID>k__BackingField: 0
   <SoulValue>k__BackingField: 1
+  <CollectionSound>k__BackingField: Assets/Audio/SoundFX/Ding.mp3
 --- !u!212 &247663943
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -875,6 +877,7 @@ GameObject:
   - component: {fileID: 767083002}
   - component: {fileID: 767083001}
   - component: {fileID: 767083004}
+  - component: {fileID: 767083005}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -979,6 +982,23 @@ MonoBehaviour:
   <CameraLerpSpeed>k__BackingField: 10
   <CameraPeekInput>k__BackingField: Player/Movement
   _gridIndex: {x: 0, y: 0}
+--- !u!114 &767083005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 767083000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1e3b5ff774e47d4b8c56a8574a4d2aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MusicPath: Assets/Audio/Music/fire.mp3
+  TransitionIn: {fileID: 11400000, guid: 2fba1b2b20c2dd943b24dde3a6be3629, type: 2}
+  TransitionOut: {fileID: 11400000, guid: fdbdfb9e75170024784f011a9316803d, type: 2}
+  AudioOverride: {fileID: 0}
+  _audioManager: {fileID: 11400000, guid: d577fc83f5d8456478e3ae9f4d50ee27, type: 2}
 --- !u!1 &856351455
 GameObject:
   m_ObjectHideFlags: 0
@@ -1090,6 +1110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <SoulID>k__BackingField: 0
   <SoulValue>k__BackingField: 1
+  <CollectionSound>k__BackingField: Assets/Audio/SoundFX/Ding.mp3
 --- !u!212 &856351460
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -18674,6 +18695,9 @@ MonoBehaviour:
     <WallJumpForce>k__BackingField: 20
     <WallSlideFallReduction>k__BackingField: 0.25
     <JumpAngle>k__BackingField: 60
+    <JumpAudio>k__BackingField: Assets/Audio/SoundFX/Jump.wav
+    <LandAudio>k__BackingField: Assets/Audio/SoundFX/Land.wav
+    <WallJumpAudio>k__BackingField: Assets/Audio/SoundFX/Jump.wav
     <GroundCheckDistance>k__BackingField: 0.55
     <GroundLayer>k__BackingField:
       serializedVersion: 2
@@ -18786,6 +18810,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   _interactPrompt: Player/Interact
+  _isRunningDialogue: 0
 --- !u!1 &1079650873
 GameObject:
   m_ObjectHideFlags: 0
@@ -18897,6 +18922,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <SoulID>k__BackingField: 0
   <SoulValue>k__BackingField: 1
+  <CollectionSound>k__BackingField: Assets/Audio/SoundFX/Ding.mp3
 --- !u!212 &1079650878
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -24163,6 +24189,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <SoulID>k__BackingField: 0
   <SoulValue>k__BackingField: 1
+  <CollectionSound>k__BackingField: Assets/Audio/SoundFX/Ding.mp3
 --- !u!212 &1814720204
 SpriteRenderer:
   m_ObjectHideFlags: 0

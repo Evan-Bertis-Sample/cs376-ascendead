@@ -12,4 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b102e2bf35577048b252c875dd3345a, type: 3}
   m_Name: AudioOverrideGroup
   m_EditorClassIdentifier: 
-  <IdentifyByFileName>k__BackingField: 0
+  <IdentifyByFileName>k__BackingField: 1
+  <UseRandomPitch>k__BackingField: 1
+  <UseRandomVolume>k__BackingField: 1
+  <FlatVolumeMultiplier>k__BackingField: 0.5
+  <PitchMultiplerRange>k__BackingField:
+    Min: 0.8
+    Max: 1.2
+  <VolumeMultiplierRange>k__BackingField:
+    Min: 0.5
+    Max: 0.75

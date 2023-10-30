@@ -14,7 +14,7 @@ namespace CurlyCore.Audio
         public AudioTransitionObject TransitionOut;
         public AudioOverride AudioOverride;
 
-        [SerializeField] private AudioManager _audioManager;
+        [SerializeField, GlobalDefault] private AudioManager _audioManager;
 
         private void Awake()
         {

@@ -127,6 +127,7 @@ namespace CurlyCore.Audio
 
         public void PlayOneShot(string soundPath, Vector3 position = default, IAudioOverride iOverride = null, Action<AudioCallback> OnPlay = null)
         {
+            if (soundPath == null || soundPath == "") return;
             IEnumerator coroutine = PlayOneShotRoutine(soundPath, position, iOverride, OnPlay);
             App.Instance.CoroutineRunner.StartGlobalCoroutine(coroutine);
         }

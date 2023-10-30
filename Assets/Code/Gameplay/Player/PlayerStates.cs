@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using CurlyCore;
+using CurlyCore.Audio;
 using CurlyUtility.DSA;
 using UnityEngine;
 
@@ -59,11 +61,13 @@ namespace Ascendead.Player
         protected bool _isHoldingInput = false;
 
         protected PlayerContext _context;
+        [GlobalDefault] protected AudioManager _audioManager;
 
         public void OnStateEnter()
         {
             _timeInState = 0f;
             _isHoldingInput = true;
+            if (_audioManager == null) DependencyInjector.InjectDependencies(this);
         }
 
         public virtual bool IsReady()
@@ -88,6 +92,11 @@ namespace Ascendead.Player
 
             Vector2 newVelocity = _context.Rigidbody.velocity + jumpDirection * jumpForce;
             _context.Rigidbody.velocity = newVelocity;
+
+            // play the jump sound
+            string audioSound = GetJumpSound(_context);
+            if (audioSound != null || audioSound != "") _audioManager.PlayOneShot(audioSound, position :_context.Rigidbody.position);
+            // _audioManager.PlayOneShot(GetJumpSound(_context), position :_context.Rigidbody.position);
         }
 
         public virtual float GetJumpForce(PlayerContext context, float timeInState)
@@ -104,6 +113,8 @@ namespace Ascendead.Player
 
             return Vector2.up;
         }
+
+        public virtual string GetJumpSound(PlayerContext context) => context.Configuration.JumpAudio;
 
         protected Vector2 GetNormalJumpVector(PlayerContext context, bool left)
         {
@@ -129,6 +140,8 @@ namespace Ascendead.Player
         {
             return context.Configuration.WallJumpForce;
         }
+
+        public override string GetJumpSound(PlayerContext context) => context.Configuration.WallJumpAudio;
 
         public override Vector2 GetJumpDirection(PlayerContext context)
         {
