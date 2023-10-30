@@ -155,7 +155,7 @@ namespace Ascendead.Dialogue
                         break;
                 }
             }
-            Debug.Log(PrintTree());
+            // Debug.Log(PrintTree());
         }
 
         private string PrintTree(DialogueNode node = null, int indentLevel = 0)

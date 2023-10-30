@@ -35,7 +35,7 @@ I heard that they are stuck here because they haven't felt inner peace.
 They are just wierd...
 
 That's all I really have to say about them.
-[Exit("ASK ME)]
+[Exit("ASK ME")]
 
 [Option("Oh nevermind")]
 Okay...
