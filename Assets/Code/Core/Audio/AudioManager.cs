@@ -44,6 +44,8 @@ namespace CurlyCore.Audio
         private GameObject _sourceParent;
         private List<AudioSource> _availableSources = new List<AudioSource>();
         private List<AudioSource> _unavailableSources = new List<AudioSource>();
+        private Dictionary<AssetReference, AudioClip> _alreadyLoaded = new Dictionary<AssetReference, AudioClip>();
+        private Dictionary<AudioClip, int> _usersPerClip = new Dictionary<AudioClip, int>();
 
         // Constants
         public readonly string AUDIO_GROUP_NAME = "Audio";
@@ -172,7 +174,23 @@ namespace CurlyCore.Audio
                 return null;
             }
 
-            AudioClip clip = await clipReference.LoadAssetAsync<AudioClip>().Task;
+            AudioClip clip;
+            if (_alreadyLoaded.ContainsKey(clipReference)) clip = _alreadyLoaded[clipReference];
+            else
+            {
+                try
+                {
+                    clip = await clipReference.LoadAssetAsync<AudioClip>().Task;
+                    _alreadyLoaded[clipReference] = clip;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+
+            if (_usersPerClip.ContainsKey(clip)) _usersPerClip[clip] = _usersPerClip[clip] + 1;
+            else _usersPerClip[clip] = 1;
 
             if (clip == null)
             {
@@ -185,7 +203,17 @@ namespace CurlyCore.Audio
             source.Play();
             AudioCallback callback = new AudioCallback(source, this);
             callback.OnAudioEnd += RestashSource;
-            callback.OnAudioEnd += source => Addressables.Release(clip);
+            callback.OnAudioEnd += source =>
+            {
+                _usersPerClip[clip] = _usersPerClip[clip] - 1;
+
+                if (_usersPerClip[clip] <= 0)
+                {
+                    // it's time to free this resource
+                    Addressables.Release(clip);
+                    _alreadyLoaded.Remove(clipReference);
+                }
+            };
             return callback;
         }
         #endregion

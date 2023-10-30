@@ -110,8 +110,11 @@ namespace CurlyCore.Input
         {
             if (player >= _playerDevices.Count) return false;
             if (_playerDevices[player] == null) return false;
-
-            return GetContext(path, player).action.WasPressedThisFrame();
+            
+            var context = GetContext(path, player);
+            if (context.action == null) return false;
+            
+            return context.action.WasPressedThisFrame();
         }
 
         public bool GetInputUp(string path, int player = 0)

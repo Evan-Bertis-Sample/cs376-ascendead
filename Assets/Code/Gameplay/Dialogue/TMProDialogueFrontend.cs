@@ -52,7 +52,6 @@ namespace Ascendead.Dialogue
 
         public override async Task<int> DisplayNode(DialogueNode node, string characterName)
         {
-
             switch (node.Type)
             {
                 case DialogueNode.NodeType.Content:
@@ -65,12 +64,29 @@ namespace Ascendead.Dialogue
                         // Debug.Log("Waiting for continue prompt");
                         return _inputManager.GetInputDown(_continuePrompt);
                     });
-
-                    await Task.Yield();
                     break;
                 case DialogueNode.NodeType.Branch:
                     // keep the text on screen, but show the options
-                    return await ShowOptions(node.Parameters);
+                    Debug.Log("TMProDialogueFrontend : Displaying Branch!");
+                    List<object> options = node.Parameters;
+                    
+                    Debug.Log($"Branch : Showing {options.Count} options!");
+                    // show the layout group
+                    _choicesLayoutGroup.gameObject.SetActive(true);
+
+                    for (int i = 0; i < options.Count; i++)
+                    {
+                        var choice = GameObject.Instantiate(_choiceButtonPrefab, _choicesLayoutGroup.transform);
+                        var choiceText = choice.GetComponentInChildren<TextMeshProUGUI>();
+                        var button = choice.GetComponent<Button>();
+
+                        choiceText.text = (string)options[i];
+                        int choiceIndex = i;
+                        button.onClick.AddListener(() => ChooseOption(choiceIndex));
+                    }
+
+                    choiceMadeCompletionSource = new TaskCompletionSource<int>();
+                    return await choiceMadeCompletionSource.Task;
                 case DialogueNode.NodeType.Option:
                     // we should never get here
                     break;
@@ -96,25 +112,6 @@ namespace Ascendead.Dialogue
             _choicesLayoutGroup.gameObject.SetActive(false);
         }
 
-        private async Task<int> ShowOptions(List<object> options)
-        {
-            // show the layout group
-            _choicesLayoutGroup.gameObject.SetActive(true);
-
-            for (int i = 0; i < options.Count; i++)
-            {
-                var choice = GameObject.Instantiate(_choiceButtonPrefab, _choicesLayoutGroup.transform);
-                var choiceText = choice.GetComponentInChildren<TextMeshProUGUI>();
-                var button = choice.GetComponent<Button>();
-
-                choiceText.text = (string)options[i];
-                int choiceIndex = i;
-                button.onClick.AddListener(() => ChooseOption(choiceIndex));
-            }
-
-            choiceMadeCompletionSource = new TaskCompletionSource<int>();
-            return await choiceMadeCompletionSource.Task;
-        }
 
         private void ChooseOption(int choiceIndex)
         {

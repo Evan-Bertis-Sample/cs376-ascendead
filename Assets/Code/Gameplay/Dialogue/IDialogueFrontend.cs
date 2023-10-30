@@ -14,8 +14,8 @@ namespace Ascendead.Dialogue
 
     public abstract class DialogueFrontendObject : ScriptableObject, IDialogueFrontend
     {
-        public abstract Task BeginDialogue();
-        public abstract Task<int> DisplayNode(DialogueNode node, string characterName); // Must return an int
-        public abstract Task EndDialogue();
+        public virtual async Task BeginDialogue() {}
+        public virtual async Task<int> DisplayNode(DialogueNode node, string characterName) {return -1; } // Must return an int
+        public virtual async Task EndDialogue() {}
     }
 }

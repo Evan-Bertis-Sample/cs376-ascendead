@@ -49,12 +49,15 @@ namespace Ascendead.Dialogue
             Task endDialogueTask = dialogueFrontend.EndDialogue();
             while (!endDialogueTask.IsCompleted) yield return null;
 
+            yield return null; // wait for the next frame
+
         }
 
         private async Task TraverseDialogue(DialogueNode node)
         {
             if (node == null) return;
 
+            await Task.Yield(); // a frame between traversals 
             int choiceIndex = -1; // Default value when there are no choices
             Debug.Log($"Traversing dialogue node -- {node.Content}");
 
@@ -67,6 +70,10 @@ namespace Ascendead.Dialogue
                 case DialogueNode.NodeType.Branch:
                     Debug.Log("Displaying dialogue node -- branch");
                     choiceIndex = await dialogueFrontend.DisplayNode(node, _characterName);
+                    if (choiceIndex == -1)
+                    {
+                        Debug.LogError("No valid option was chosen!");
+                    }
                     await TraverseDialogue(node.Children[choiceIndex]);
                     break;
                 case DialogueNode.NodeType.Option:

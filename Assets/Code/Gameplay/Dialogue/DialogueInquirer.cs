@@ -28,7 +28,7 @@ namespace Ascendead.Dialogue
         {
             if (_isRunningDialogue) return;
 
-            if (_inputManager.IsInputState(_interactPrompt, ActionStatus.ActionState.Performed))
+            if (_inputManager.GetInputDown(_interactPrompt))
             {
                 Debug.Log("Requesting dialogue");
 
