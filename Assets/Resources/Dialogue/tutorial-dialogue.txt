@@ -1,0 +1,22 @@
+# comment
+
+# Starting node
+Oh...
+
+It's been a while since I've seen one of you.
+
+# First simple branch example
+[Branch]
+[Option("One of me?")]
+Yeah, a skelly like me that can walk around, like me self.
+I was beginning to think that I was destined to an eternity alone...
+[Exit]
+
+[Option("Who are you?")]
+I think the better question is who are you?
+I thought i was the only skelly around.
+[Exit]
+
+The name is Skeeps, by the way.
+
+You are in the underworld.

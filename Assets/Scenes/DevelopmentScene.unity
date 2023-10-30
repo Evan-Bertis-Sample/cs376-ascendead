@@ -19105,7 +19105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae6541f9d5b7d54790330d065dee646, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dialoguePath: Assets/Resources/Dialogue/test-dialogue.txt
+  _dialoguePath: Assets/Resources/Dialogue/tutorial-dialogue.txt
   _characterName: Skeeps
   dialogueFrontend: {fileID: 11400000, guid: 13ef6e952e74f244cb24fad2825288fb, type: 2}
 --- !u!61 &1083176514

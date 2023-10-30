@@ -20,10 +20,14 @@ namespace Ascendead.Dialogue
         [SerializeField] private Transform _canvasTransform; // Assign the canvas transform
         [SerializeField, InputPath] private string _continuePrompt;
         [SerializeField] private float _typwriterSpeed = 10f; // Characters per second
-        [SerializeField] private Vector3 _panelEnterPosition;
+        
+        [SerializeField] private Vector3 _panelTargetPosition;
+        [SerializeField] private float _tweenTime = 0.5f;
+        [SerializeField] private AnimationCurve _tweenCurve;
 
         private TMPDialogueFrontendComponent _dialoguePanelInstance;
         private RectTransform _dialoguePanelRectTransform;
+        private Vector3 _dialoguePanelOffscreenPosition;
         [GlobalDefault] private InputManager _inputManager;
 
         private TaskCompletionSource<int> choiceMadeCompletionSource;
@@ -43,7 +47,26 @@ namespace Ascendead.Dialogue
             _dialoguePanelInstance = GameObject.Instantiate(_frontendComponent, _canvasTransform);
             _dialoguePanelInstance.CharacterNameText.text = characterName;
             _dialoguePanelRectTransform = _dialoguePanelInstance.GetComponent<RectTransform>();
-            _dialoguePanelRectTransform.localPosition = _panelEnterPosition;
+
+            // Starting position
+            // Calculate it so that it's barely off of the screen
+            // If the panel is close to the top, then it should be above the screen
+            // If the panel is close to the bottom, then it should be below the screen
+            _dialoguePanelOffscreenPosition = _dialoguePanelRectTransform.localPosition;
+            _dialoguePanelOffscreenPosition.y = _panelTargetPosition.y +  _dialoguePanelRectTransform.rect.height * 2f;
+            _dialoguePanelRectTransform.localPosition = _dialoguePanelOffscreenPosition;
+
+            // Tween the panel into position
+            float timeElapsed = 0f;
+
+            while (timeElapsed < _tweenTime)
+            {
+                _dialoguePanelRectTransform.localPosition = Vector3.LerpUnclamped(_dialoguePanelOffscreenPosition, _panelTargetPosition, _tweenCurve.Evaluate(timeElapsed / _tweenTime));
+                // _dialoguePanelRectTransform.localPosition = Vector3.Lerp(_dialoguePanelOffscreenPosition, _panelTargetPosition, timeElapsed / _tweenTime);s
+                timeElapsed += Time.deltaTime;
+                await Task.Yield();
+            }
+            _dialoguePanelRectTransform.localPosition = _panelTargetPosition;
 
             // Animate panel entering screen
             // ... (Implement the desired animation logic here)
@@ -57,7 +80,7 @@ namespace Ascendead.Dialogue
             {
                 case DialogueNode.NodeType.Content:
                     // just display the content
-                    HideOptions();
+                    await HideOptions();
                     await Typewriter.ApplyTo(_dialoguePanelInstance.DialogueText, node.Content, _typwriterSpeed, inputManager: _inputManager, inputPrompt: _continuePrompt);
                     // Wait for continue prompt
 
@@ -106,7 +129,7 @@ namespace Ascendead.Dialogue
             return await Task.FromResult(-1);
         }
 
-        private void HideOptions()
+        private async Task HideOptions()
         {
             // delete all the buttons
             foreach (Transform child in _dialoguePanelInstance.ChoicesLayoutGroup.transform)
@@ -128,7 +151,7 @@ namespace Ascendead.Dialogue
         {
             // Animate panel exiting screen
             // ... (Implement the desired animation logic here)
-            GameObject.Destroy(_dialoguePanelInstance);
+            GameObject.Destroy(_dialoguePanelInstance.gameObject);
             await Task.Yield();
         }
     }
