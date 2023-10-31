@@ -21,8 +21,17 @@ namespace Ascendead.Dialogue
 
         void Start()
         {
+            _dialoguePath = "";
+            string path = _dialoguePath;
+            SetDialogueTree(path);
+        }
+
+        public void SetDialogueTree(string path)
+        {
+            if (_dialoguePath == path) return; // If the path is the same, don't do anything
+            _dialoguePath = path;
             Debug.Log($"DialogueRunner : Building dialogue tree from '{_dialoguePath}'"); // Log the path of the dialogue tree
-            string actualPath = _dialoguePath.Replace("Assets/Resources/", "");
+            string actualPath = path.Replace("Assets/Resources/", "");
             actualPath = actualPath.Replace(".txt", ""); // Remove the .txt extension
             // Initialize and load dialogue tree
             if (!string.IsNullOrEmpty(actualPath))

@@ -1,0 +1,13 @@
+Ooh. It seems that you have enough souls. Would you be interested in spending 5 of them on something useful?
+
+[Branch]
+[Option("No I'm good")]
+Very well then...
+[Exit]
+
+[Option("Of course!")]
+Great. Enjoy your new boost!
+[Event("UpgradeCharge")]
+[Exit]
+
+Take care now.

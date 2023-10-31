@@ -226,6 +226,7 @@ namespace Ascendead.Dialogue
             List<object> parameterObject = new List<object>();
             foreach (string parameter in paremeters)
             {
+                if (parameter == "") continue;
                 parameterObject.Add(ParseParameter(parameter));
             }
 
@@ -236,6 +237,7 @@ namespace Ascendead.Dialogue
 
         private object ParseParameter(string parameter)
         {
+            Debug.Log("Dialogue Tree : Parsing parameter - " + parameter + ".");
             // if it's a number
             if (parameter[0] >= '0' && parameter[0] <= '9')
             {

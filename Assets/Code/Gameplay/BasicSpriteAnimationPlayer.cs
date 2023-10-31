@@ -10,6 +10,7 @@ namespace Ascendead.Components
     {
         [field: SerializeField] public SpriteAnimation Animation { get; private set; }
         [field: SerializeField] public bool RandomizeStartTime { get; private set; } = false;
+        [field: SerializeField] public bool UpdateTime { get; private set; } = true;
 
         private SpriteRenderer _spriteRenderer;
 
@@ -30,7 +31,7 @@ namespace Ascendead.Components
         private void Update()
         {
             if (Animation == null) return;
-            Animation.UpdateTime();
+            if (UpdateTime) Animation.UpdateTime();
 
             Sprite sprite = Animation.GetFrame();
             if (sprite != null) SetSprite(sprite);
