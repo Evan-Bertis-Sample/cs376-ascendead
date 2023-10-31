@@ -47,6 +47,7 @@ namespace Ascendead.Dialogue
             _dialoguePanelInstance = GameObject.Instantiate(_frontendComponent, _canvasTransform);
             _dialoguePanelInstance.CharacterNameText.text = characterName;
             _dialoguePanelRectTransform = _dialoguePanelInstance.GetComponent<RectTransform>();
+            _frontendComponent.DialogueText.text = "";
 
             // Starting position
             // Calculate it so that it's barely off of the screen
@@ -84,7 +85,7 @@ namespace Ascendead.Dialogue
                     await Typewriter.ApplyTo(_dialoguePanelInstance.DialogueText, node.Content, _typwriterSpeed, inputManager: _inputManager, inputPrompt: _continuePrompt);
                     // Wait for continue prompt
 
-                    if (node.Children.Count > 0 && node.Children[0].Type != DialogueNode.NodeType.Branch)
+                    if ((node.Children.Count > 0 && node.Children[0].Type != DialogueNode.NodeType.Branch) || node.Children.Count == 0)
                     {
                         await TaskUtility.WaitUntil(() =>
                         {

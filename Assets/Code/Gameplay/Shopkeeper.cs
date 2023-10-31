@@ -34,12 +34,12 @@ namespace Ascendead.Components
         private void Update()
         {
             int charges = ChargeTracker.GetMaxCharges();
-            if (_hasBoughtCharge) return;
 
             if (charges >= _chargeUpgradeLevel)
             {
                 _dialogueRunner.SetDialogueTree(_alreadyBoughtChargeFilePath);
                 _hasBoughtCharge = true;
+                return;
             }
 
             int souls = SoulManager.GetSoulCount();

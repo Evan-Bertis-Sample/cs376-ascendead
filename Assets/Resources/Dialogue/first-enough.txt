@@ -1,4 +1,4 @@
-Ooh. It seems that you have enough souls. Would you be interested in spending 5 of them on something useful?
+Ooh. It seems that you have enough souls. Would you be interested in giving me 5 of them on something useful?
 
 [Branch]
 [Option("No I'm good")]

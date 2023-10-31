@@ -1,0 +1,19 @@
+You need something?
+
+[Branch]
+[Option("Can you explain how I can jump higher?")]
+By holding down the 'space' key, you should be able to build up a charge.
+Pay attention to the orbs at the bottom of the screen, they represent the charges you have filled up.
+Every charge you have filled up will make you jump much higher.
+[Exit]
+
+[Option("What am I supposed to be doing?")]
+You should collect souls and ascend the rocky terrain.
+Once you reach high enough, we can release the souls!
+[Exit]
+
+[Option("No I don't need anything)]
+Okay!
+[Exit]
+
+Goodbye!

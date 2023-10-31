@@ -16,7 +16,7 @@ MonoBehaviour:
   _choiceButtonPrefab: {fileID: 3925972334573180564, guid: ef8a98da82194c447a76cb7492894823, type: 3}
   _canvasTransform: {fileID: 0}
   _continuePrompt: Player/Interact
-  _typwriterSpeed: 30
+  _typwriterSpeed: 50
   _panelTargetPosition: {x: 0, y: 80, z: 0}
   _tweenTime: 0.5
   _tweenCurve:

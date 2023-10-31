@@ -19,10 +19,30 @@ I thought i was the only skelly around.
 
 The name is Skeeps, by the way.
 
-You are in the underworld.
+Don't be frightened, but you are in the underworld.
 
-Well, I have a gift for you anyhow.
+[Branch]
+[Option("The underworld?")]
+Yes. The underworld.
+[Exit]
+
+Right now, we have an abundance of souls that have been let loose.
+They have just been flying around everywhere.
+I've been collecting them, in hopes that I can return them back to where they belong.
+They seem to really be concentrated in the upper bits of the underworld.
+But, I have a lot of luggage to carry around in this coffin.
+Could you help me?
+
+[Branch]
+[Option("I guess I have no other choice...")]
+Splendid!
+I think this would help you.
+*Gives you a strange orange orb*
 
 [Event("UpgradeCharge", 5)]
 
-This should let you jump higher.
+That is a little piece of a fractured soul.
+These fractured souls seem to give us Skellys some abilities.
+With it, you should be able to jump higher.
+That should help you ascend the rocky terrain and get those souls for me!
+Try it out!
