@@ -18,6 +18,8 @@ namespace Ascendead.Dialogue
         [GlobalDefault] private InputManager _inputManager;
         [SerializeField] private bool _isRunningDialogue = false;
 
+        private List<DialogueRunner> _runnersInRange = new List<DialogueRunner>();
+
         private void Awake()
         {
             DependencyInjector.InjectDependencies(this);
@@ -27,6 +29,7 @@ namespace Ascendead.Dialogue
         private void Update()
         {
             if (_isRunningDialogue) return;
+
 
             if (_inputManager.GetInputDown(_interactPrompt))
             {
@@ -41,6 +44,16 @@ namespace Ascendead.Dialogue
             }
         }
 
+        public void RegisterRunner(DialogueRunner runner)
+        {
+            _runnersInRange.Add(runner);
+        }
+
+        public void UnregisterRunner(DialogueRunner runner)
+        {
+            _runnersInRange.Remove(runner);
+        }
+
         private IEnumerator RunDialogueCoroutine(DialogueRunner runner)
         {
             Debug.Log("Running dialogue coroutine");
@@ -52,28 +65,22 @@ namespace Ascendead.Dialogue
 
         private DialogueRunner FindNearestRunnerWithLineOfSight()
         {
-            var colliders = Physics2D.OverlapCircleAll(transform.position, detectionRadius, interactableLayer);
+            if (_runnersInRange.Count == 0) return null;
+            
             DialogueRunner nearestRunner = null;
             float nearestDistance = float.MaxValue;
-            int totalInRadius = 0;
-            int totalWithLineOfSight = 0;
-
-            foreach (var collider in colliders)
+            foreach (var runner in _runnersInRange)
             {
-                var runner = collider.GetComponent<DialogueRunner>();
-                if (runner != null) totalInRadius++;
-                if (runner != null && HasLineOfSight(runner.transform))
+                if (runner == null) continue;
+                if (!HasLineOfSight(runner.transform)) continue;
+
+                float distance = Vector2.Distance(transform.position, runner.transform.position);
+                if (distance < nearestDistance)
                 {
-                    totalWithLineOfSight++;
-                    float distance = Vector2.Distance(transform.position, runner.transform.position);
-                    if (distance < nearestDistance)
-                    {
-                        nearestDistance = distance;
-                        nearestRunner = runner;
-                    }
+                    nearestRunner = runner;
+                    nearestDistance = distance;
                 }
             }
-            Debug.Log("DialogueInquirer : Found " + totalInRadius + " runners in radius, " + totalWithLineOfSight + " with line of sight.");
             return nearestRunner;
         }
 

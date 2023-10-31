@@ -10,7 +10,7 @@ namespace Ascendead.Tracking
         [System.Serializable]
         public class ChargeData
         {
-            public int MaxCharges = 3;
+            public int MaxCharges = 0;
         }
 
         public static ChargeTracker Instance { get; private set; }

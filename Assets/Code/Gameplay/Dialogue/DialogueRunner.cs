@@ -10,11 +10,18 @@ namespace Ascendead.Dialogue
     {
         [SerializeField, FilePath] private string _dialoguePath;
         [SerializeField] private string _characterName; // Character's name field
+        [SerializeField] private float _detectionRadius = 5f;
+        [SerializeField] private LayerMask _interactableLayer;
+        [SerializeField] private LayerMask _obstacleLayer;
+        [SerializeField] private GameObject _displayPrompt;
+        [SerializeField] private Vector2 _displayPromptOffset;
 
         private DialogueTree _dialogueTree;
         private DialogueNode _currentNode;
 
-        public DialogueFrontendObject dialogueFrontend;
+        public DialogueFrontendObject DialogueFrontend;
+        private List<DialogueInquirer> _regsteredInquirers = new List<DialogueInquirer>();
+        private GameObject _displayPromptInstance;
 
         public delegate void DialogueEventHandler(string eventName, object[] parameters);
         public event DialogueEventHandler OnDialogueEvent;
@@ -24,6 +31,52 @@ namespace Ascendead.Dialogue
             _dialoguePath = "";
             string path = _dialoguePath;
             SetDialogueTree(path);
+
+            // spawn display prompt
+            _displayPromptInstance = Instantiate(_displayPrompt, transform.position + (Vector3)_displayPromptOffset, Quaternion.identity);
+            _displayPromptInstance.transform.SetParent(transform);
+        }
+
+        private void Update()
+        {
+            // Make sure to remove yourself from nearby DialogueInquirers
+
+            List<DialogueInquirer> toRemove = new List<DialogueInquirer>();
+            foreach (var inquirer in _regsteredInquirers)
+            {
+                if (inquirer == null) continue;
+                if (!HasLineOfSight(inquirer.transform) || Vector2.Distance(transform.position, inquirer.transform.position) > _detectionRadius)
+                {
+                    inquirer.UnregisterRunner(this);
+                    toRemove.Add(inquirer);
+                }
+            }
+
+            foreach (var inquirer in toRemove)
+            {
+                _regsteredInquirers.Remove(inquirer);
+            }
+
+            // add yourself to nearby DialogueInquirers
+            var colliders = Physics2D.OverlapCircleAll(transform.position, _detectionRadius, _interactableLayer);
+            foreach (var collider in colliders)
+            {
+                var inquirer = collider.GetComponent<DialogueInquirer>();
+                if (inquirer != null && HasLineOfSight(inquirer.transform))
+                {
+                    inquirer.RegisterRunner(this);
+                    _regsteredInquirers.Add(inquirer);
+                }
+            }
+
+            // show display prompt if there are nearby DialogueInquirers
+            _displayPromptInstance.SetActive(_regsteredInquirers.Count > 0);
+        }
+
+        private bool HasLineOfSight(Transform target)
+        {
+            RaycastHit2D hit = Physics2D.Linecast(transform.position, target.position, _obstacleLayer);
+            return hit.collider == null || hit.transform == target; // No obstacle or the obstacle is the target
         }
 
         public void SetDialogueTree(string path)
@@ -43,14 +96,14 @@ namespace Ascendead.Dialogue
 
         public IEnumerator RunDialogueCoroutine()
         {
-            if (_dialogueTree == null || dialogueFrontend == null)
+            if (_dialogueTree == null || DialogueFrontend == null)
             {
                 Debug.LogError("DialogueTree or DialogueFrontend is not set.");
                 yield break;
             }
 
             Debug.Log("Beginning Dialogue");
-            Task beginDialogueTask = dialogueFrontend.BeginDialogue(_characterName);
+            Task beginDialogueTask = DialogueFrontend.BeginDialogue(_characterName);
             while (!beginDialogueTask.IsCompleted) yield return null;
 
             Debug.Log("Running Dialogue");
@@ -58,7 +111,7 @@ namespace Ascendead.Dialogue
             while (!dialogueTask.IsCompleted) yield return null;
 
             Debug.Log("Ending Dialogue");
-            Task endDialogueTask = dialogueFrontend.EndDialogue();
+            Task endDialogueTask = DialogueFrontend.EndDialogue();
             while (!endDialogueTask.IsCompleted) yield return null;
 
             yield return null; // wait for the next frame
@@ -81,7 +134,7 @@ namespace Ascendead.Dialogue
             {
                 case DialogueNode.NodeType.Branch:
                     Debug.Log("Displaying dialogue node -- branch");
-                    choiceIndex = await dialogueFrontend.DisplayNode(node);
+                    choiceIndex = await DialogueFrontend.DisplayNode(node);
                     if (choiceIndex == -1)
                     {
                         Debug.LogError("No valid option was chosen!");
@@ -115,12 +168,12 @@ namespace Ascendead.Dialogue
                     break;
                 case DialogueNode.NodeType.Exit:
                     Debug.Log("Displaying dialogue node -- exit");
-                    choiceIndex = await dialogueFrontend.DisplayNode(node);
+                    choiceIndex = await DialogueFrontend.DisplayNode(node);
                     await TraverseDialogue(node.Children[0]); // just go on to the next node
                     break;
                 default:
                     Debug.Log("Displaying dialogue node -- standard text");
-                    choiceIndex = await dialogueFrontend.DisplayNode(node);
+                    choiceIndex = await DialogueFrontend.DisplayNode(node);
                     await TraverseDialogue(node.Children[0]);
                     break;
             }
