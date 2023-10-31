@@ -160,6 +160,7 @@ namespace Ascendead.Player
 
         public override float GetJumpForce(PlayerContext context, float timeInState)
         {
+            if (context == null) return 0f;
             return context.Configuration.WallJumpForce;
         }
 

@@ -1,7 +1,13 @@
-Ooh. It seems that you have enough souls. Would you be interested in giving me 5 of them on something useful?
+Oh you again! Don't question how I got up here.
+
+I have my ways... Let's just say I have a lot of those fragmented souls.
+
+I'm still looking for souls. Do you happen to have 9? I'd love to have a complete set of 10.
+
+Ooh. It seems that you do! Could I have them.
 
 [Branch]
-[Option("No I'm good")]
+[Option("No...")]
 Very well then...
 [Exit]
 
